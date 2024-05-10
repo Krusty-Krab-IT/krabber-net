@@ -1,2 +1,11 @@
+.DS_Store
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+go.zip
+tmp/*
+.idea/*
+.env
 app
 bin/application

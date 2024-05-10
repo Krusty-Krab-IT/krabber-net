@@ -1,0 +1,49 @@
+{{define "title"}}Likes{{end}}
+
+{{define "page"}}
+<!DOCTYPE html>
+ <html lang='en'>
+    {{ template "header" .}}
+    <body class="bg-dark text-light">
+        <div class="container-fluid vh-100 master-container">
+        <div class="row h-100 justify-content-center">
+            {{ template "nav" .}}
+            <!-- Main Content -->
+             <div class="col col-lg-6 content border-dark border-left border-right p-0" id="main-panel">
+                 <div class="border-dark border-bottom-2" id="content-heading">
+                      <div class="header d-flex justify-content-between align-items-center mb-4">
+                            <h1><a href="/Likes" class="text-dark">Likes</a></h1>
+                      </div>
+                    <div class="col col-lg-6 content border-dark border-left border-right p-0" id="main-panel">
+                        <!-- Fast-Molt -->
+                        <div id="loaded-molts">
+                          <div class="regular-molt mini-molt border-dark py-2 d-flex flex-row absolute-container border-bottom px-3 mb-2">
+                            <!-- Spacer -->
+                            <ul id="molt-list">
+                                       {{ range .Likes}}
+                                            <div id="comment-div-" class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-center">
+                                                        <div id="comment-div-edit" class="flex-grow-1">
+                                                            <h5 class="card-title mb-1">{{ .PK }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                            </div>
+                                        </div>
+                                    </ul>
+                                    </div>
+                                </div>
+                            {{ end }}
+                        </ul>
+                     </div>
+
+                  </div>
+            </div>
+                 </div>
+             </div>
+      {{ template "search" . }}
+    </body>
+</html>
+{{end}}

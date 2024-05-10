@@ -1,0 +1,219 @@
+{{define "title"}}Welcome to the Trench{{end}}
+
+{{define "page"}}
+ <!DOCTYPE html>
+ <html lang='en'>
+ {{ template "header" .}}
+  <body class="bg-dark text-light">
+  <div id="welcome-header" class="row justify-content-between justify-content-lg-end align-items-center">
+  <div class="col-auto">
+   <a href="/crab/signup">
+     <button type="button" class="h-center btn btn-primary rounded-pill" id="molt-btn">
+        <strong class="">Join Krabber</strong>
+      </button>
+   </a>
+  </div>
+  <div class="col-auto">
+    <a class="text-muted float-right" id="molt-btn" href="/crab/login">
+      <strong>or log in</strong>
+      <svg width="16" height="16" data-jam="arrow-right">
+        <use href="#arrow-right"></use>
+      </svg>
+    </a>
+  </div>
+</div>
+
+  <!-- Large krabber logo / header -->
+  <img src="static/img/LOGO.svg" alt="Large krabber header"
+       class="header-cover scroll-destination scroll-destination-mobile mb-4">
+
+  <!-- Sales pitch -->
+  <div class="d-flex flex w-100 justify-content-center scroll-destination">
+    <div class="w-75">
+      <h2 class="text-light-darker mt-lg-4 pb-3">Krabber is an open-source dumb blogging platform powered by crabs.</h2>
+
+      <!-- Feature list-->
+      <div id="feature-showcase" class="mt-4 row row-cols-1 row-cols-lg-2 scroll-destination-mobile">
+        <div class="col">
+          <div class="feature row">
+            <div class="col-auto">
+              <svg class="btn-icon" width="64" height="64" data-jam="write-f">
+                <use href="#write-f"></use>
+              </svg>
+            </div>
+            <div class="col">
+              <h5>No A.I. </h5>
+              <p class="text-light-darker">
+                We don't test on <em>crabs</em>, your trench is a chronological timeline. That means new molts
+                first, then old molts from the crabs you follow. So, no getting lost in a echo chamber.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="feature row">
+            <div class="col-auto">
+              <svg class="btn-icon" width="64" height="64" data-jam="terminal">
+                <use href="#terminal"></use>
+              </svg>
+            </div>
+            <div class="col">
+              <h5>No data selling.</h5>
+              <p class="text-light-darker">
+               Thanks to a generous grant from the Bikini Bottom modernization effort, the Krusty Krab R&D dept. is able
+               to provide this service for free without any need to sell data.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="feature row">
+            <div class="col-auto">
+              <svg class="btn-icon" width="64" height="64" data-jam="eye-close-f">
+                <use href="#eye-close-f"></use>
+              </svg>
+            </div>
+            <div class="col">
+              <h5>No invasion of privacy.</h5>
+              <p class="text-light-darker">
+              The only data collected is data that you share in the form of molts. There are no advertisers, trackers,
+              mailing-lists, profile bios or other sneaky tactics. Data shared stays on the platform.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="feature row">
+            <div class="col-auto">
+              <svg class="btn-icon rainbow" width="64" height="64" data-jam="heart-f">
+                <use href="#heart-f"></use>
+              </svg>
+              <img src="static/img/rainbow_heart.svg" class="p-0 icon-overlap h-center" height="64" width="64" alt="">
+            </div>
+            <div class="col">
+              <h5>Inclusive.</h5>
+              <p class="text-light-darker">
+                We encourage a welcoming environment and do not tolerate harassment or targeted misinformation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image spacer -->
+      <div class="d-inline-block image-spacer mb-lg-0"></div>
+
+
+      <!-- Content samples -->
+      <div id="demo-section" class="row">
+        <div class="w-100 my-5 d-none d-lg-block absolute-container scroll-destination">
+          <div class="vertical-line"></div>
+        </div>
+
+        <!-- Molt sample -->
+        <div id="demo-molts" class="col p-3 order-3 order-lg-1 bg-dark-less rounded-media absolute-container">
+          <small class="text-muted absolute-center fit-content">
+            "Democracy thrives in darkness of the trench" - Abraham Lincoln 1999
+          </small>
+        </div>
+        <div class="w-100 order-2 d-lg-none"></div>
+        <div id="demo-molts-explanation" class="col p-3 order-1 order-lg-2 row align-items-center">
+          <div class="w-100 text-lg-right demo-sales-pitch scroll-destination-mobile">
+            <h3>
+              Top-tier <span class="text-primary">hipster cred, welcome to dumb blogging.</span>
+            </h3>
+            <p>
+              Oh, you use X? That's so July 2023.
+            </p>
+          </div>
+        </div>
+
+        <div class="w-100 order-4 my-5 absolute-container scroll-destination">
+          <div class="vertical-line d-none d-lg-block"></div>
+        </div>
+
+        <!-- Profile bio sample -->
+        <div id="demo-bio-explanation" class="col p-3 order-4 row align-items-center">
+          <div class="w-100 pr-lg-4 demo-sales-pitch scroll-destination-mobile">
+            <h3>
+              Don't show <span class="text-primary">the world</span> who you are.
+            </h3>
+            <p>
+              Most social networks give you a profile picture, and short bio, then they sell your profile data in these
+              shady data brokerage marketplaces. Krabber doesn't care to collect your information like that so enjoy
+              not being able to customize at all.
+            </p>
+          </div>
+        </div>
+        <div class="w-100 order-5 d-lg-none"></div>
+        <div id="demo-bio" class="col p-3 order-6 bg-dark-less rounded-media absolute-container">
+          <div class="rounded neue-card p-3 bio-fields">
+            <table id="user-info">
+              <tr>
+                <th></th>
+                <td class="bio-field-value">
+                </td>
+              </tr>
+            </table>
+          </div>
+          <small class="float-right text-muted">
+          </small>
+          <small class="text-muted absolute-center fit-content">
+            Again, we're all crabs here...
+          </small>
+        </div>
+
+        <div class="w-100 order-7 my-5 absolute-container scroll-destination">
+          <div class="vertical-line d-none d-lg-block"></div>
+        </div>
+
+        <!-- Convergent Evolution -->
+        <div id="demo-evolution" class="col p-3 order-10 order-lg-8 wikipedia rounded-media">
+          <h1>Carcinisation</h1>
+          <p>From Krabberpedia, the free encyclopedia</p>
+          <p>
+            <b>Carcinisation</b> (or <b>carcinization</b>) is an example of <a href="javascript:void(0);" title="Convergent evolution">convergent evolution</a> in which a <a href="javascript:void(0);" title="Crustacean">crustacean</a> <a href="javascript:void(0);" title="Evolution">evolves</a> into a <a href="javascript:void(0);" title="Crab">crab</a>-like form from a non-crab-like form.
+          </p>
+        </div>
+        <div class="w-100 order-9 d-lg-none"></div>
+        <div id="demo-evolution-explanation" class="col p-3 order-8 order-lg-10 row align-items-center">
+          <div class="w-100 text-lg-right demo-sales-pitch scroll-destination-mobile">
+            <h3>
+              Supported by <span class="text-primary">science.</span>
+            </h3>
+            <p>
+              Fact: You and everyone you love will eventually become
+              a crab.
+              <abbr title="Except for everything that doesn't evolve into crabs.">
+                No exceptions.
+              </abbr>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Section spacer -->
+      <div class="d-inline-block w-100 my-3 scroll-destination"></div>
+
+      <div class="w-100 justify-content-center row row-cols-1 mx-0 my-5 scroll-destination-mobile">
+        <h5 class="mt-4 text-center text-light-darker">Sound good? Come join us among the Crabs.</h5>
+        <div class="d-block mt-2">
+         <a href="/crab/signup">
+           <button type="button" class="h-center btn btn-primary rounded-pill" id="molt-btn">
+              <strong class="">Join Krabber</strong>
+            </button>
+         </a>
+        </div>
+      </div>
+
+      <!-- Spacer -->
+      <div class="d-inline-block w-100 my-5 d-lg-none text-muted text-molt text-center"></div>
+    </div>
+  </div>
+    </body>
+    </html>
+{{end}}

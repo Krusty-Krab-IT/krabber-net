@@ -1,0 +1,23 @@
+{{define "title"}}Activate{{end}}
+
+{{define "page"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "header" .}}
+    <body>
+        <form action='/crab/activate' method='POST' novalidate>
+            <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
+            <div>
+                <label>Enter activation token:</label>
+                {{with .Form.FieldErrors.token}}
+                    <label class='error'>{{.}}</label>
+                {{end}}
+                <input type='text' name='token' value='{{.Form.Token}}'>
+            </div>
+            <div>
+                <input type='submit' value='Activate'>
+            </div>
+        </form>
+    </body>
+</html>
+{{end}}

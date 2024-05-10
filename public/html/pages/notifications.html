@@ -1,0 +1,18 @@
+{{define "title"}} Notifications {{end}}
+{{define "page"}}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "header" .}}
+<h1>Need to pass in the page number is: {{ .PageNumber }}, current_page: {{ .Page }},</h1>
+<body class="bg-dark text-light">
+    <div class="container-fluid vh-100 master-container">
+        <div class="row h-100 justify-content-center">
+            {{ template "nav" .}}
+
+            <h1>Check out your notifications...</h1>
+            </div>
+            </div>
+            </body>
+            </html>
+
+{{ end }}

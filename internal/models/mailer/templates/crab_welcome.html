@@ -1,0 +1,42 @@
+
+{{define "subject"}}Welcome to the Krabber.net!{{end}}
+
+{{define "plainBody"}}
+Hi,
+
+Enjoy your time in the trench.
+
+Please, visit krabber.net/crab/activate in your favorite browser to activate your account by pasting the token: {{.activationToken}}
+
+Please note that this is a one-time use token, and it will expire in 3 days.
+
+Thanks,
+
+The Krabber.net Team
+{{end}}
+
+{{define "htmlBody"}}
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <p>Hi,</p>
+    <p>Thanks for signing up for the Krabber.net. Enjoy the trench.</p>
+    <p>For future reference, your user ID number is {{.UserName}}.</p>
+     <p>Please visit <a href="krabber.net/crab/activate">Krabber.net/crab/activate </a> and paste in your token to activate
+     your account: </p>
+    <pre><code>
+        {{.activationToken}}
+    </code></pre>
+    <p>Please note that this is a one-time use token, and it will expire in 3 days.</p>
+    <p>Thanks,</p>
+    <p>Krabber.net Team</p>
+</body>
+
+</html>
+{{end}}

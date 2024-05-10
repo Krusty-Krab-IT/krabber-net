@@ -1,0 +1,31 @@
+{{define "title"}}Crabmin{{end}}
+
+{{define "page"}}
+<!DOCTYPE html>
+ <html lang='en'>
+    {{ template "header" .}}
+    <h1>Crabmin Panel</h1>
+    <div class="card-footer">
+        <div id="div-follow" class="row">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-start">
+                    <div class="card p-3">
+                        <div class="d-flex align-items-center">
+                            <form>
+                              <input type='hidden' name='csrf_token' value='{{ .CSRFToken }}'>
+                                   <button
+                                        hx-post="/crabmin/sea"
+                                        hx-target="#div-follow"
+                                        hx-swap="none"
+                                        class="btn btn-secondary"> Fill Sea
+                                   </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
+{{end}}

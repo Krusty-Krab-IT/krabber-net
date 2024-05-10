@@ -1,0 +1,53 @@
+{{define "title"}}Crabs{{end}}
+
+{{ define "page" }}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "header" .}}
+{{template "nav" .}}
+<body class="bg-dark text-light">
+    <div class="container">
+        {{if not .IsAuthenticated}}
+        <div class="alert alert-danger" role="alert">
+            Crab isn't logged in...
+        </div>
+       {{ end }}
+        <ul id="crab-list">
+             {{$out := .}}
+             {{ range .Crabs  }}
+                   <div id="crab-div" class="card-bod">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div id="crab-div-edit" class="flex-grow-1" style="color:black" >
+                                <h5 class="card-title mb-1">{{ .UserName }}</h5>
+                                <p>Followers: {{.FollowerCount}}</p>
+                                <p>Following: {{.FollowingCount}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div id="div-follow" class="row">
+                            <div class="col-md-8">
+                                <div class="d-flex justify-content-start">
+                                    <div class="card p-3"  style="color:black;background-color:black">
+                                        <div class="d-flex align-items-center">
+                                        <form>
+                                            <input type='hidden' name='csrf_token' value='{{$out.CSRFToken}}'>
+                                               <button hx-post="/unfollow/{{ .ID }}" hx-target="#div-follow"
+                                                hx-swap="none" class="btn btn-secondary">Unfollow</button>
+                                               <button hx-post="/follow/{{ .ID }}" hx-target="#div-follow"
+                                                hx-swap="none" class="btn btn-primary">Follow</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{ end }}
+        </ul>
+    </div>
+</body>
+</html>
+{{end}}

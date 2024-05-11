@@ -23,9 +23,10 @@ import (
 )
 
 type conf struct {
-	port int
-	env  string
-	db   struct {
+	port    int
+	env     string
+	crabmin string
+	db      struct {
 		tableName string
 		region    string
 		url       string
@@ -70,6 +71,7 @@ func main() {
 		cfg.smtp.username = goDotEnvVariable("SMTP_USER")
 		cfg.smtp.password = goDotEnvVariable("SMTP_PASS")
 		cfg.smtp.sender = goDotEnvVariable("SMTP_SEND")
+		cfg.crabmin = goDotEnvVariable("CRABMIN")
 	}
 
 	if prod {
@@ -87,6 +89,7 @@ func main() {
 		cfg.smtp.username = os.Getenv("SMTP_USER")
 		cfg.smtp.password = os.Getenv("SMTP_PASS")
 		cfg.smtp.sender = os.Getenv("SMTP_SEND")
+		cfg.crabmin = os.Getenv("CRABMIN")
 	}
 
 	addr := flag.String("addr", ":5000", "HTTP network address") // default:5000

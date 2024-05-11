@@ -3,6 +3,7 @@ package web
 import (
 	"krabber.net/internal/models"
 	"net/http"
+	"os"
 )
 
 func (app *Application) crabmin(w http.ResponseWriter, r *http.Request) {
@@ -30,8 +31,8 @@ func (app *Application) crabminCreateSea(w http.ResponseWriter, r *http.Request)
 		app.NotFound(w)
 		return
 	}
-
-	if id != models.Crabmin {
+	ca := os.Getenv("CRABMIN")
+	if id != ca {
 		app.NotFound(w)
 		return
 	}

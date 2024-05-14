@@ -85,7 +85,6 @@ func (m TokenModel) New(c *Crab, activation string) (*Token, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	err = m.Insert(token)
 	return token, err
 }

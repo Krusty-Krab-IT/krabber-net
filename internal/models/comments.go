@@ -65,6 +65,7 @@ func (m CommentModel) Insert(crabUsername string, content string, molt *Molt) er
 			},
 		},
 	}
+	// notify
 
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)

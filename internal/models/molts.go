@@ -40,15 +40,14 @@ type Molt struct {
 func (m MoltModel) Insert(molt *Molt) error {
 	item, err := attributevalue.MarshalMap(
 		&Molt{
-			ID:     molt.ID,
-			PK:     molt.PK,
-			SK:     molt.SK,
-			GSI3PK: molt.GSI3PK,
-			GSI3SK: molt.GSI3SK,
-			GSI5PK: molt.GSI5PK,
-			GSI5SK: molt.GSI5SK,
-			Author: molt.Author,
-			//Email:   molt.Email,
+			ID:      molt.ID,
+			PK:      molt.PK,
+			SK:      molt.SK,
+			GSI3PK:  molt.GSI3PK,
+			GSI3SK:  molt.GSI3SK,
+			GSI5PK:  molt.GSI5PK,
+			GSI5SK:  molt.GSI5SK,
+			Author:  molt.Author,
 			Content: molt.Content,
 			Deleted: molt.Deleted,
 		})

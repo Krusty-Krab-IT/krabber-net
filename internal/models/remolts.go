@@ -43,7 +43,7 @@ func (m MoltModel) ShowReMolts(id string) ([]Molt, error) {
 // This crab remolts another molt
 func (m MoltModel) ReMolt(c *Crab, other, molt *Molt) error {
 	newMolt := &Molt{
-		ID:      molt.ID, // generate random ID
+		ID:      molt.ID,
 		PK:      molt.PK,
 		SK:      molt.SK,
 		GSI3PK:  molt.GSI3PK,
@@ -114,6 +114,7 @@ func (m MoltModel) ReMolt(c *Crab, other, molt *Molt) error {
 			},
 		},
 	}
+	// notify
 
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)

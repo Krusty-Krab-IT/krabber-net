@@ -3,16 +3,162 @@
 <!DOCTYPE html>
 <html lang="en">
 {{ template "header" .}}
-<h1>Need to pass in the page number is: {{ .PageNumber }}, current_page: {{ .Page }},</h1>
-<body class="bg-dark text-light">
-    <div class="container-fluid vh-100 master-container">
-        <div class="row h-100 justify-content-center">
-            {{ template "nav" .}}
+    <body class="bg-dark text-light">
+        <div class="container-fluid vh-100 master-container">
+            <div class="row h-100 justify-content-center">
+                {{ template "nav" .}}
+                <!-- Main Content -->
+                <div class="col col-lg-6 content border-dark border-left border-right p-0" id="main-panel">
+            <div class="border-dark border-bottom-2" id="content-heading">
+                <h6 class="m-1 absolute-container">
+                     <strong>
+                             Time to molt...
+                     </strong>
+                </h6>
+                    {{if not .IsAuthenticated}}
+                    <div class="alert alert-danger" role="alert">
+                        Crab isn't logged in...
+                    </div>
+                   {{ end }}
+                    <!-- The compose box lives here! -->
+                    {{ if not .Notifications }}
+                        <div class="alert alert-info" role="alert">
+                            Nothing to sea here...
+                        </div>
+                    {{ end }}
 
-            <h1>Check out your notifications...</h1>
             </div>
+            <div id="content-body" class="h-100">
+
+
+             <ul id="molt-list">
+                 {{ range .Notifications  }}
+                    {{block "molt-list-element" . }}
+                       <div class="regular-molt mini-molt border-dark py-2 d-flex flex-row absolute-container border-bottom px-3">
+                                <!-- Deleted or unavailable indicator -->
+                                    <!-- Profile box -->
+                                    <div class="mini-molt-profile-box">
+                                        <!-- molt thread link -->
+                                            <!-- Avatar image -->
+                                            <img class="rounded-circle px43 profile-picture" src="../../static/img/crab_illustration.jpg">
+
+                                    </div>
+
+                                    <!-- Indicator box -->
+                                    <div class="mini-molt-text-box w-100 h-100 px-2">
+                                        <div class="mini-molt-credentials absolute-container">
+                                                <div class="mini-molt-credentials-text">
+                                                    <span class="mini-molt-username zindex-front">
+                                                        @{{ .PK }}
+                                                    </span>
+
+                                                    <!-- Molt age -->
+                                                    <span class="mini-molt-timestamp zindex-front">
+                                                        {{ .SK }}
+                                                    </span>
+
+                                                    <!-- Thread badge -->
+                                                    <span class="text-muted">·</span>
+                                                    <span class="thread-badge">
+                                                        Thread
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        <!-- Molt content -->
+                                        <div class="mini-molt-content">
+                                                    <p class="mb-2">
+                                                        <span class="zindex-front clickable" >
+                                                            {{ .Viewed}}
+                                                        </span>
+                                                    </p>
+                                            </div>
+                                        <div class="mini-molt-actions d-flex flex-row justify-content-between mr-md-5">
+                                            <div class="mini-molt-action reply rounded-circle zindex-front" >
+                                            <a href="/molt/view/{{.TTL}}">
+                                                <svg class="mini-molt-action-icon" width="19" height="19" data-jam="message">
+                                                    <use href="/static/img/sprites.svg?version=1704178675#message"></use>
+                                                </svg>
+                                                <span class="mini-molt-action-counter ml-1">
+
+                                                </span>
+                                            </a>
+                                            </div>
+
+                                            <!-- Remolt dropdown -->
+                                            <div class="dropdown">
+                                                <!-- Remolt dropdown button -->
+                                                <div class="zindex-front mini-molt-action remolt" href="#" role="button" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                                                    <svg class="mini-molt-action-icon" width="19" height="19" data-jam="repeat">
+                                                        <use href="/static/img/sprites.svg?version=1704178675#repeat"></use>
+                                                    </svg>
+                                                    <span class="mini-molt-action-counter ml-1">
+
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Like button -->
+                                            <form method="POST">
+            {{/*                                    <input type='hidden' name='csrf_token' value='{{$out.CSRFToken}}'>*/}}
+                                                <div class="mini-molt-action like zindex-front">
+                                                    <!-- Fake like button (for welcome page showcase) -->
+
+                                                        <svg class="mini-molt-action-icon" width="19" height="19" data-jam="heart">
+                                                            <use href="/static/img/sprites.svg?version=1704178675#heart"></use>
+                                                        </svg>
+
+                                                        <svg class="mini-molt-action-icon text-primary d-none" width="19" height="19" data-jam="heart-f">
+                                                            <use href="/static/img/sprites.svg?version=1704178675#heart-f"></use>
+                                                        </svg>
+                                                        <span class="mini-molt-action-counter ml-1">
+
+                                                        </span>
+
+                                                </div>
+                                            </form>
+
+                                                <!-- Dropdown button -->
+                                            <div class="dropdown">
+                                                <span class="zindex-front mini-molt-action reply" id="dropdownMenuLink" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+
+
+                                            <svg class="mini-molt-action-icon" width="19" height="19" data-jam="more-horizontal">
+                                                <use href="/static/img/sprites.svg?version=1704178675#more-horizontal"></use>
+                                            </svg>
+
+                                                </span>
+
+
+                                                    <div class="neue-card molt-dropdown dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                        <!-- Mod panel button -->
+
+
+
+                                                    </div>
+                                                 <!-- if current user -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                 <!-- if deleted or unavailable -->
+                            </div>
+                   {{ end }}
+                {{ end }}
+              </ul>
+
+                <!-- Spacer -->
+                <div class="d-inline-block w-100 p-5 my-5 text-muted text-molt text-center"></div>
+
             </div>
-            </body>
-            </html>
+
+        </div>
+                <!-- Additional Panel -->
+                {{ template "search" . }}
+            </div>
+        </div>
+    </body>
+</html>
 
 {{ end }}

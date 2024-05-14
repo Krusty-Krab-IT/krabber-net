@@ -185,3 +185,16 @@
 </body>
 </html>
 {{ end }}
+
+                 {{ if not .Notifications }}
+                    <div class="alert alert-info" role="alert">
+                        Nothing to see here...
+                    </div>
+                 {{ end }}
+
+                    {{ range .Notifications }}
+                        {{ .PK }}
+                        {{ .SK }}
+                        {{ .TTL }}
+                        {{ .Viewed }}
+                    {{ end }}

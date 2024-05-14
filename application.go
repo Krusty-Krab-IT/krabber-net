@@ -125,6 +125,7 @@ func main() {
 		Trench:         &models.TrenchModel{SVC: svc},
 		Likes:          &models.LikesModel{SVC: svc},
 		Mailer:         mailer.New(cfg.smtp.host, cfg.smtp.port, cfg.smtp.username, cfg.smtp.password, cfg.smtp.sender),
+		Notifications:  &models.NotificationModel{SVC: svc},
 		TemplateCache:  templateCache,
 		FormDecoder:    formDecoder,
 		SessionManager: sessionManager,

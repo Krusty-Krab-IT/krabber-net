@@ -9,13 +9,13 @@ func (app *Application) notifications(w http.ResponseWriter, r *http.Request) {
 		app.NotFound(w)
 		return
 	}
-	molts, err := app.Molts.Show(id) // add get string here
+	molts, err := app.Notifications.Show(id) // add get string here
 	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
 
 	data := app.NewTemplateData(r)
-	data.Molts = molts
+	data.Notifications = molts
 	app.Render(w, r, http.StatusOK, "notifications.html", data)
 }

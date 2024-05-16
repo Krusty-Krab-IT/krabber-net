@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"time"
 )
 
 type FollowModel struct {
@@ -30,6 +31,18 @@ func (m FollowModel) Insert(Follower, Followee *Crab) error {
 		})
 	if err != nil {
 		fmt.Println("ERR: ", err)
+		panic(err)
+	}
+	notification, err := attributevalue.MarshalMap(
+		&Notification{
+			PK:       fmt.Sprintf("N#%s", Followee.ID),
+			SK:       fmt.Sprintf("N#%s#%s#%s", Follower.ID, "F", Followee.ID), // needs to be unique enough...
+			UserName: Follower.UserName,
+			Viewed:   false,
+			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
+		})
+	if err != nil {
+		fmt.Println("Notification ERR: ", err)
 		panic(err)
 	}
 	tItems := make([]types.TransactWriteItem, 0)
@@ -83,9 +96,18 @@ func (m FollowModel) Insert(Follower, Followee *Crab) error {
 			},
 		},
 	}
+	// notify
+	tw4 := types.TransactWriteItem{
+		Put: &types.Put{
+			Item:                notification,
+			TableName:           aws.String(TableName),
+			ConditionExpression: aws.String("attribute_not_exists(PK)"),
+		},
+	}
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)
 	tItems = append(tItems, tw3)
+	tItems = append(tItems, tw4)
 
 	_, err = m.SVC.ItemTable.TransactWriteItems(context.TODO(), &dynamodb.TransactWriteItemsInput{
 		TransactItems: tItems,

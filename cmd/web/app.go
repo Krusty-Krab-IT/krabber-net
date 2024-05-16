@@ -27,4 +27,5 @@ type Application struct {
 	Tokens         *models.TokenModel
 	Trench         *models.TrenchModel
 	Wg             sync.WaitGroup
+	Notifications  *models.NotificationModel
 }

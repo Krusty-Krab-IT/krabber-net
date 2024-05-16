@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"time"
 )
 
 // show a crab's remolts
@@ -43,7 +44,7 @@ func (m MoltModel) ShowReMolts(id string) ([]Molt, error) {
 // This crab remolts another molt
 func (m MoltModel) ReMolt(c *Crab, other, molt *Molt) error {
 	newMolt := &Molt{
-		ID:      molt.ID, // generate random ID
+		ID:      molt.ID,
 		PK:      molt.PK,
 		SK:      molt.SK,
 		GSI3PK:  molt.GSI3PK,
@@ -54,6 +55,19 @@ func (m MoltModel) ReMolt(c *Crab, other, molt *Molt) error {
 		Content: molt.Content,
 		Remolt:  true,
 		Deleted: molt.Deleted,
+	}
+	ownerID := other.PK[2:]
+	notification, err := attributevalue.MarshalMap(
+		&Notification{
+			PK:       fmt.Sprintf("N#%s", ownerID), // alert original author of molt
+			SK:       fmt.Sprintf("N#%s#%s#%s", ownerID, "R", molt.ID),
+			UserName: other.Author, // person who remolted
+			Viewed:   false,
+			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
+		})
+	if err != nil {
+		fmt.Println("Notification ERR: ", err)
+		panic(err)
 	}
 
 	item, err := attributevalue.MarshalMap(newMolt)
@@ -114,10 +128,17 @@ func (m MoltModel) ReMolt(c *Crab, other, molt *Molt) error {
 			},
 		},
 	}
-
+	tw4 := types.TransactWriteItem{
+		Put: &types.Put{
+			Item:                notification,
+			TableName:           aws.String(TableName),
+			ConditionExpression: aws.String("attribute_not_exists(PK)"),
+		},
+	}
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)
 	tItems = append(tItems, tw3)
+	tItems = append(tItems, tw4)
 
 	_, err = m.SVC.ItemTable.TransactWriteItems(context.TODO(), &dynamodb.TransactWriteItemsInput{
 		TransactItems: tItems,

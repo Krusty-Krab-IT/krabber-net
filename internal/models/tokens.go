@@ -85,7 +85,6 @@ func (m TokenModel) New(c *Crab, activation string) (*Token, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	err = m.Insert(token)
 	return token, err
 }
@@ -116,7 +115,7 @@ func (m TokenModel) Get(tokenScope, tokenPlaintext string) (*Token, error) {
 	if err != nil {
 		return t, fmt.Errorf("UnmarshalMap: %v\n", err)
 	}
-	fmt.Println("pretty get token", prettyPrint(t))
+	//fmt.Println("pretty get token", prettyPrint(t))
 
 	return t, nil
 }

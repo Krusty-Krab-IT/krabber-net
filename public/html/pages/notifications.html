@@ -1,18 +1,88 @@
 {{define "title"}} Notifications {{end}}
 {{define "page"}}
-<!DOCTYPE html>
 <html lang="en">
 {{ template "header" .}}
-<h1>Need to pass in the page number is: {{ .PageNumber }}, current_page: {{ .Page }},</h1>
-<body class="bg-dark text-light">
-    <div class="container-fluid vh-100 master-container">
-        <div class="row h-100 justify-content-center">
-            {{ template "nav" .}}
+    <body class="bg-dark text-light">
+        <div class="container-fluid vh-100 master-container">
+            <div class="row h-100 justify-content-center">
+                {{ template "nav" .}}
+                <!-- Main Content -->
+                <div class="col col-lg-6 content border-dark border-left border-right p-0" id="main-panel">
+            <div class="border-dark border-bottom-2" id="content-heading">
+                <h6 class="m-1 absolute-container">
+                     <strong>
+                             Notifications...
+                     </strong>
+                </h6>
+                    {{if not .IsAuthenticated}}
+                        <div class="alert alert-danger" role="alert">
+                            Crab isn't logged in...
+                        </div>
+                   {{ end }}
+                    <!-- The compose box lives here! -->
+                    {{ if not .Notifications }}
+                        <div class="alert alert-info" role="alert">
+                            Nothing to sea here...
+                        </div>
+                    {{ end }}
+            </div>
+            <div id="content-body" class="h-100">
+             <ul id="molt-list">
+                 {{ range .Notifications  }}
+                    {{block "molt-list-element" . }}
+                       <div class="regular-molt mini-molt border-dark py-2 d-flex flex-row absolute-container border-bottom px-3">
+                                    <!-- Profile box -->
+                                    <div class="mini-molt-profile-box">
+                                         <img class="rounded-circle px43 profile-picture" src="../../static/img/crab_illustration.jpg">
+                                    </div>
 
-            <h1>Check out your notifications...</h1>
+                                    <!-- Indicator box -->
+                                    <div class="mini-molt-text-box w-100 h-100 px-2">
+                                        <div class="mini-molt-credentials absolute-container">
+                                                <div class="mini-molt-credentials-text">
+                                                    <span class="mini-molt-username zindex-front">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        <!-- Molt content -->
+                                        <div class="mini-molt-content">
+                                            <p class="mb-2">
+                                                <span class="zindex-front clickable" >
+                                                    {{ if not .Viewed }}
+                                                        {{ if eq (slice .SK 39 40) "M"}}
+                                                            @{{ .UserName }} commented <i>"{{ .Content }}"</i> on your <a href="/molt/view/{{ slice .SK 42 }}"> molt</a>.
+                                                        {{end }}
+                                                        {{ if eq (slice .SK 39 40) "L"}}
+                                                            @{{ .UserName }} liked your <a href="/molt/view/{{slice .SK 41}}">molt</a>.
+                                                        {{end }}
+                                                        {{ if eq (slice .SK 39 40) "F"}}
+                                                            @{{ .UserName }} followed you.
+                                                        {{ end }}
+                                                        {{ if eq (slice .SK 39 40) "R"}}
+                                                            @{{ .UserName }} remolted your <a href="/molt/view/{{ slice .SK 41}}">molt</a>.
+                                                        {{ end }}
+                                                    {{ end }}
+{{/*                                                    {{ .Viewed}}*/}}
+                                                </span>
+                                           </p>
+                                        </div>
+                                    </div>
+                            </div>
+                   {{ end }}
+                {{ end }}
+              </ul>
+
+                <!-- Spacer -->
+                <div class="d-inline-block w-100 p-5 my-5 text-muted text-molt text-center"></div>
+
             </div>
+
+        </div>
+                <!-- Additional Panel -->
+                {{ template "search" . }}
             </div>
-            </body>
-            </html>
+        </div>
+    </body>
+</html>
 
 {{ end }}

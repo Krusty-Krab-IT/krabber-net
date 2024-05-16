@@ -36,6 +36,21 @@ func (m CommentModel) Insert(crabUsername string, content string, molt *Molt) er
 		fmt.Println("ERR marshalling: ", err)
 		panic(err)
 	}
+	ownerID := molt.PK[2:]
+	fmt.Println("username is commenting on...", crabUsername)
+	notification, err := attributevalue.MarshalMap(
+		&Notification{
+			PK:       fmt.Sprintf("N#%s", ownerID),                      // alert original author of molt
+			SK:       fmt.Sprintf("N#%s#%s#%s", ownerID, "MC", molt.ID), // what if multiple comments then it would overwrite?
+			UserName: crabUsername,
+			Content:  content,
+			Viewed:   false,
+			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
+		})
+	if err != nil {
+		fmt.Println("Notification ERR: ", err)
+		panic(err)
+	}
 	tItems := make([]types.TransactWriteItem, 0)
 	tw1 := types.TransactWriteItem{
 		Put: &types.Put{
@@ -65,9 +80,16 @@ func (m CommentModel) Insert(crabUsername string, content string, molt *Molt) er
 			},
 		},
 	}
+	tw3 := types.TransactWriteItem{
+		Put: &types.Put{
+			Item:      notification,
+			TableName: aws.String(TableName),
+		},
+	}
 
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)
+	tItems = append(tItems, tw3)
 
 	_, err = m.SVC.ItemTable.TransactWriteItems(context.TODO(), &dynamodb.TransactWriteItemsInput{
 		TransactItems: tItems,

@@ -17,6 +17,7 @@ type templateData struct {
 	Likes           []models.Like
 	Crabs           []models.Crab
 	Follows         models.Follow
+	Notifications   []models.Notification
 	Form            any
 	Flash           string
 	IsAuthenticated bool

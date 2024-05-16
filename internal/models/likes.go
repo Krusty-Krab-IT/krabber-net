@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"time"
 )
 
 type Like struct {
@@ -20,8 +21,35 @@ type LikesModel struct {
 	SVC ItemService
 }
 
+// Change this to be by Email -> Add e-mail to param store ->
+func (m LikesModel) ByID(id string) (*Crab, error) {
+	c := make([]Crab, 0)
+	ut, err := m.SVC.ItemTable.Query(context.TODO(), &dynamodb.QueryInput{
+		TableName:              aws.String(TableName),
+		IndexName:              aws.String("GSI2"),
+		KeyConditionExpression: aws.String("GSI2PK = :gsi2pk"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":gsi2pk": &types.AttributeValueMemberS{Value: fmt.Sprintf("ID#%s", id)},
+		},
+	})
+	if err != nil {
+		fmt.Printf("BYID ERROR %v", err)
+		panic(err)
+	}
+	err = attributevalue.UnmarshalListOfMaps(ut.Items, &c)
+	if err != nil {
+		fmt.Errorf("UnmarshalMap: %v\n", err)
+	}
+	//fmt.Println("HERES BY ID", prettyPrint(&c[0]))
+	return &c[0], nil
+}
+
 // Insert a Like record
 func (m LikesModel) Insert(cid string, molt *Molt) error {
+	c, err := m.ByID(cid)
+	if err != nil {
+		fmt.Printf("ERR getting crab that liked the molt... %v", err)
+	}
 	item, err := attributevalue.MarshalMap(
 		&Like{
 			PK:     fmt.Sprintf("L#%s", cid),
@@ -31,6 +59,20 @@ func (m LikesModel) Insert(cid string, molt *Molt) error {
 		})
 	if err != nil {
 		fmt.Println("ERR: ", err)
+		panic(err)
+	}
+	ownerID := molt.PK[2:]
+	fmt.Println("OWNER ID", ownerID)
+	notification, err := attributevalue.MarshalMap(
+		&Notification{
+			PK:       fmt.Sprintf("N#%s", ownerID),                     // slice the crabs id
+			SK:       fmt.Sprintf("N#%s#%s#%s", ownerID, "L", molt.ID), // needs to be unique enough...
+			UserName: c.UserName,                                       // need to fetch crab
+			Viewed:   false,
+			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
+		})
+	if err != nil {
+		fmt.Println("Notification ERR: ", err)
 		panic(err)
 	}
 	tItems := make([]types.TransactWriteItem, 0)
@@ -62,8 +104,15 @@ func (m LikesModel) Insert(cid string, molt *Molt) error {
 			},
 		},
 	}
+	tw3 := types.TransactWriteItem{
+		Put: &types.Put{
+			Item:      notification,
+			TableName: aws.String(TableName),
+		},
+	}
 	tItems = append(tItems, tw1)
 	tItems = append(tItems, tw2)
+	tItems = append(tItems, tw3)
 
 	_, err = m.SVC.ItemTable.TransactWriteItems(context.TODO(), &dynamodb.TransactWriteItemsInput{
 		TransactItems: tItems,

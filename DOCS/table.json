@@ -1,0 +1,367 @@
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "GSI10PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI10SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI1PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI1SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI2PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI2SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI3PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI3SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI4PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI4SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI5PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI5SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI6PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI6SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI7PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI7SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI8PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI8SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI9PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "GSI9SK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "PK",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "SK",
+      "AttributeType": "S"
+    }
+  ],
+  "TableName": "krabber",
+  "KeySchema": [
+    {
+      "AttributeName": "PK",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "SK",
+      "KeyType": "RANGE"
+    }
+  ],
+  "TableStatus": "ACTIVE",
+  "CreationDateTime": "2024-04-16T16:31:17.371Z",
+  "ProvisionedThroughput": {
+    "NumberOfDecreasesToday": 0,
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  },
+  "TableSizeBytes": 0,
+  "ItemCount": 0,
+  "TableArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber",
+  "TableId": "58626047-56e7-4d72-b4b9-b5a02b7b2521",
+  "GlobalSecondaryIndexes": [
+    {
+      "IndexName": "GSI10",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI10PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI10SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI10"
+    },
+    {
+      "IndexName": "GSI2",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI2PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI2SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI2"
+    },
+    {
+      "IndexName": "GSI1",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI1PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI1SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI1"
+    },
+    {
+      "IndexName": "GSI4",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI4PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI4SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI4"
+    },
+    {
+      "IndexName": "GSI3",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI3PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI3SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI3"
+    },
+    {
+      "IndexName": "GSI6",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI6PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI6SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI6"
+    },
+    {
+      "IndexName": "GSI5",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI5PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI5SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI5"
+    },
+    {
+      "IndexName": "GSI8",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI8PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI8SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI8"
+    },
+    {
+      "IndexName": "GSI7",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI7PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI7SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI7"
+    },
+    {
+      "IndexName": "GSI9",
+      "KeySchema": [
+        {
+          "AttributeName": "GSI9PK",
+          "KeyType": "HASH"
+        },
+        {
+          "AttributeName": "GSI9SK",
+          "KeyType": "RANGE"
+        }
+      ],
+      "Projection": {
+        "ProjectionType": "ALL"
+      },
+      "IndexStatus": "ACTIVE",
+      "ProvisionedThroughput": {
+        "NumberOfDecreasesToday": 0,
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+      },
+      "IndexSizeBytes": 0,
+      "ItemCount": 0,
+      "IndexArn": "arn:aws:dynamodb:us-west-2:700230361120:table/krabber/index/GSI9"
+    }
+  ],
+  "DeletionProtectionEnabled": false
+}

@@ -40,7 +40,7 @@ func (m LikesModel) ByID(id string) (*Crab, error) {
 	if err != nil {
 		fmt.Errorf("UnmarshalMap: %v\n", err)
 	}
-	fmt.Println("HERES BY ID", prettyPrint(&c[0]))
+	//fmt.Println("HERES BY ID", prettyPrint(&c[0]))
 	return &c[0], nil
 }
 

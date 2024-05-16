@@ -129,7 +129,7 @@ func (m CrabModel) Insert(crab *Crab) (*Crab, error) {
 }
 
 func (m CrabModel) Activate(crab *Crab) error {
-	fmt.Println("update crab ", prettyPrint(crab))
+	//fmt.Println("update crab ", prettyPrint(crab))
 	_, err := m.SVC.ItemTable.UpdateItem(context.TODO(), &dynamodb.UpdateItemInput{
 		TableName: aws.String(TableName),
 		Key: map[string]types.AttributeValue{
@@ -209,7 +209,7 @@ func (m CrabModel) ByID(id string) (*Crab, error) {
 	if err != nil {
 		fmt.Errorf("UnmarshalMap: %v\n", err)
 	}
-	fmt.Println("HERES BY ID", prettyPrint(&c[0]))
+	//fmt.Println("HERES BY ID", prettyPrint(&c[0]))
 	return &c[0], nil
 }
 
@@ -231,7 +231,7 @@ func (m CrabModel) ByEmailForID(email string) (*Crab, error) {
 	if err != nil {
 		fmt.Errorf("UnmarshalMap: %v\n", err)
 	}
-	fmt.Println("HERES BY ID", prettyPrint(&c[0]))
+	//fmt.Println("HERES BY ID", prettyPrint(&c[0]))
 	return &c[0], nil
 }
 
@@ -252,7 +252,7 @@ func (m CrabModel) ByEmail(email string) (*Crab, error) {
 	if err != nil {
 		fmt.Errorf("UnmarshalMap: %v\n", err)
 	}
-	fmt.Println("heres crab", prettyPrint(&c[0]))
+	//fmt.Println("heres crab", prettyPrint(&c[0]))
 	return &c[0], nil
 }
 

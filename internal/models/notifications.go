@@ -22,11 +22,13 @@ type NotificationModel struct {
 }
 
 type Notification struct {
-	PK     string `dynamodbav:"PK"`
-	SK     string `dynamodbav:"SK"`
-	Scope  string `dynamodbav:"scope"`
-	TTL    string `dynamodbav:"ttl"` // make them expire after 1 week so that the dynamodb table stays slim...
-	Viewed bool   `dynamodbav:"viewed"`
+	PK       string `dynamodbav:"PK"`
+	SK       string `dynamodbav:"SK"`
+	UserName string `dynamodbav:"user_name"`
+	Content  string `dynamodbav:"content"`
+	Scope    string `dynamodbav:"scope"`
+	TTL      string `dynamodbav:"ttl"` // make them expire after 1 week so that the dynamodb table stays slim...
+	Viewed   bool   `dynamodbav:"viewed"`
 }
 
 // show all the notifications for the logged in crab
@@ -58,4 +60,28 @@ func (m NotificationModel) Show(crabID string) ([]Notification, error) {
 		molts = append(molts, molt...)
 	}
 	return molts, nil
+}
+
+// mark as seen
+func (m NotificationModel) MarkAsViewed(n []Notification) error {
+	for _, notification := range n {
+		_, err := m.SVC.ItemTable.UpdateItem(context.TODO(), &dynamodb.UpdateItemInput{
+			TableName: aws.String(TableName),
+			Key: map[string]types.AttributeValue{
+				"PK": &types.AttributeValueMemberS{Value: notification.PK},
+				"SK": &types.AttributeValueMemberS{Value: notification.SK},
+			},
+			UpdateExpression: aws.String(fmt.Sprintf("set %s = :%s", "viewed", "viewed")),
+			ExpressionAttributeValues: map[string]types.AttributeValue{
+				fmt.Sprintf(":%s", "viewed"): &types.AttributeValueMemberBOOL{Value: true},
+			},
+		})
+
+		if err != nil {
+			panic(err)
+		}
+
+	}
+
+	return nil
 }

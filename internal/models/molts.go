@@ -26,7 +26,6 @@ type Molt struct {
 	GSI5PK       string `dynamodbav:"GSI5PK"`
 	GSI5SK       string `dynamodbav:"GSI5SK"`
 	Author       string `dynamodbav:"author"`
-	Email        string `dynamodbav:"email"`
 	CommentCount int    `dynamodbav:"comment_count"`
 	Content      string `dynamodbav:"content"`
 	Deleted      bool   `dynamodbav:"deleted"`

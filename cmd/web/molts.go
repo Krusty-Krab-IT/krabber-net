@@ -164,7 +164,7 @@ func (app *Application) moltView(w http.ResponseWriter, r *http.Request) {
 
 	data := app.NewTemplateData(r)
 	data.Molt = *molt
-	comments, err := app.Comments.On(data.Molt.ID) // add get string here
+	comments, err := app.Comments.On(data.Molt.ID)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -172,7 +172,8 @@ func (app *Application) moltView(w http.ResponseWriter, r *http.Request) {
 	for _, c := range comments {
 		data.Molt.Comments = append(data.Molt.Comments, c)
 	}
-
+	// if notification then update it here...?
+	// or as fetching notifications mark them all as read
 	app.Render(w, r, http.StatusOK, "view.html", data)
 }
 

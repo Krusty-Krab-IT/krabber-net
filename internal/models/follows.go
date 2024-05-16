@@ -35,10 +35,11 @@ func (m FollowModel) Insert(Follower, Followee *Crab) error {
 	}
 	notification, err := attributevalue.MarshalMap(
 		&Notification{
-			PK:     fmt.Sprintf("N#%s", Followee.ID),
-			SK:     fmt.Sprintf("N#%s#%s#%s", Follower.ID, "F", Followee.ID), // needs to be unique enough...
-			Viewed: false,
-			TTL:    fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
+			PK:       fmt.Sprintf("N#%s", Followee.ID),
+			SK:       fmt.Sprintf("N#%s#%s#%s", Follower.ID, "F", Followee.ID), // needs to be unique enough...
+			UserName: Follower.UserName,
+			Viewed:   false,
+			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
 		})
 	if err != nil {
 		fmt.Println("Notification ERR: ", err)

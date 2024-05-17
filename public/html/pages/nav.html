@@ -102,8 +102,8 @@
                             </a>
                         </div>
                         <div class="mini-molt-text-box w-100 h-100 px-2">
-                            <form hx-trigger="submit" hx-post="/molt/modal/create" hx-on-htmx-after-request="if(event.detail.successful) this.reset()" hx-target="#exampleModal" hx-swap="afterbegin">
-                                <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
+                            <form hx-trigger="submit" hx-post="/molt/modal/create" hx-on-htmx-after-request="if(event.detail.successful) this.reset()">
+{{/*                                <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>*/}}
                                 <div class="mini-compose-textarea">
                                     <textarea id="content" name="content" rows="5" class="my-2 w-100" placeholder="How are you feeling?"></textarea>
                                 </div>

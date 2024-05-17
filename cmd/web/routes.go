@@ -68,7 +68,6 @@ func (app *Application) Routes() http.Handler {
 	protected := dynamic.Append(app.requireAuthentication)
 	router.Handler(http.MethodPost, "/molt/create", protected.ThenFunc(app.moltCreatePost))
 	router.Handler(http.MethodPost, "/crab/logout", protected.ThenFunc(app.crabLogoutPost))
-
 	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
 	return standard.Then(router)
 }

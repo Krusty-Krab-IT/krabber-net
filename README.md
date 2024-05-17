@@ -24,6 +24,8 @@ Mr.Krabs isn't going to pay out of his own pocket after all...
 - [x] like button should work (backend exists)
 - [ ] create password reset page (backend exists)
 - [ ] create mr.krabs bot
+- [ ] URL shortener with hyperlink 
+- [ ] view count on molts
 - [ ] Notifications
   - [ ] '@' mentions i.f.f implement the complete feature
   - [x] New Follower

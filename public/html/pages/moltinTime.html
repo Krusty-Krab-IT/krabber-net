@@ -21,6 +21,7 @@
                         Crab isn't logged in...
                     </div>
                    {{ end }}
+
                     <!-- The compose box lives here! -->
                     <div class="mini-compose-box border-bottom border-dark px-3 py-2 d-flex flex-row focused">
                         <div class="mini-molt-profile-box">
@@ -185,16 +186,3 @@
 </body>
 </html>
 {{ end }}
-
-                 {{ if not .Notifications }}
-                    <div class="alert alert-info" role="alert">
-                        Nothing to see here...
-                    </div>
-                 {{ end }}
-
-                    {{ range .Notifications }}
-                        {{ .PK }}
-                        {{ .SK }}
-                        {{ .TTL }}
-                        {{ .Viewed }}
-                    {{ end }}

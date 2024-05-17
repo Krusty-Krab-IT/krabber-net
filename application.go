@@ -55,7 +55,7 @@ type conf struct {
 func main() {
 	var cfg conf
 	var err error
-	prod := true
+	prod := false
 	if !prod {
 		// Environment variables are simpler than SSM..
 		cfg.db.tableName = goDotEnvVariable("TABLE_NAME")
@@ -75,7 +75,7 @@ func main() {
 	}
 
 	if prod {
-		// Environment variables are simpler than SSM..
+
 		cfg.db.tableName = os.Getenv("TABLE_NAME")
 		cfg.db.region = os.Getenv("REGION")
 		cfg.db.sac = os.Getenv("DB_SAC")

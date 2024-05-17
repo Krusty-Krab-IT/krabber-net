@@ -261,3 +261,67 @@ func (app *Application) moltCreatePost(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("ERROR molt-list-element %v", err)
 	}
 }
+
+func (app *Application) moltModalCreatePost(w http.ResponseWriter, r *http.Request) {
+	var form moltCreateForm
+
+	err := app.DecodePostForm(r, &form)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	form.CheckField(validator.NotBlank(form.Content), "content", "This field cannot be blank")
+
+	if !form.Valid() {
+		data := app.NewTemplateData(r)
+		data.Form = form
+		app.Render(w, r, http.StatusUnprocessableEntity, "create.html", data) // redirect oops page?
+		return
+	}
+	crabID := app.SessionManager.GetString(r.Context(), "authenticatedCrabID")
+	author := app.SessionManager.GetString(r.Context(), "authenticatedCrabUserName")
+	KSUID := ksuid.GenerateKSUID()
+	id := uuid.New().String()
+
+	now := time.Now()
+	y, mnth, d := now.Date()
+
+	molt := &models.Molt{
+		ID:      id,
+		PK:      fmt.Sprintf("M#%s", crabID),
+		SK:      fmt.Sprintf("M#%s#%s", crabID, KSUID),
+		GSI3PK:  "M#" + fmt.Sprintf("%d-%d-%d", y, int(mnth), d), //fmt.Sprintf("M#%s", time.Now().Format(time.RFC3339))
+		GSI3SK:  fmt.Sprintf("M#%s", id),
+		GSI5PK:  fmt.Sprintf("M#%s", id),
+		GSI5SK:  fmt.Sprintf("M#%s", id),
+		Author:  author,
+		Deleted: false,
+		Content: form.Content,
+	}
+
+	res := app.Molts.Insert(molt)
+	if res != nil {
+		fmt.Println("error after inserting molt..?")
+		app.serverError(w, r, err)
+		return
+	}
+	Followers := app.Follows.Followers(crabID)
+	if Followers != nil {
+		err := app.Trench.Insert(Followers, molt)
+		fmt.Println("Alerting followers of my molt...")
+		if err != nil {
+			app.serverError(w, r, err)
+		}
+	}
+	app.SessionManager.Put(r.Context(), "flash", "Molt successfully created!")
+	const moltinTime = "nav.html"
+	file := app.TemplateCache[moltinTime]
+	if err != nil {
+		fmt.Printf("Error moltin time: %v", err)
+	}
+	err = file.ExecuteTemplate(w, "modal-nav", "")
+	if err != nil {
+		fmt.Printf("ERROR exampleModal %v", err)
+	}
+}

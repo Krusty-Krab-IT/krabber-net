@@ -1,0 +1,28 @@
+branch-defaults:
+  fixing-duplicates-bug-username:
+    environment: crabber-net-production
+  main:
+    environment: crabber-net-production
+    group_suffix: null
+  master:
+    environment: crabber-net-production
+  molt-modal:
+    environment: crabber-net-production
+  notifications:
+    environment: crabber-net-production
+  updating-docs:
+    environment: crabber-net-production
+global:
+  application_name: c-prod
+  branch: null
+  default_ec2_keyname: crabberNetSSH
+  default_platform: Go 1 running on 64bit Amazon Linux 2023
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application

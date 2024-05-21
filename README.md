@@ -15,6 +15,7 @@ Mr.Krabs isn't going to pay out of his own pocket after all...
 
 ## Pull Request Ideas
 
+
 - [ ] Do a complete rewrite in Rust for better alignment with brand
 - [x] Page refresh after form submission (molts...)
 - [x] Name in thread should show crab name that made it
@@ -31,7 +32,7 @@ Mr.Krabs isn't going to pay out of his own pocket after all...
   - [x] New Follower
   - [x] Like
   - [x] Remolt
-  - [x] Comment
+  - [x] Comment -> backwards 
 
 - [ ] Settings
 - [ ] Refactor HTML templates to not be so repetitive 

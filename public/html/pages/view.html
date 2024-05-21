@@ -218,14 +218,16 @@
                             </div>
                             <!-- Replies -->
                                 <div id="loaded-molts">
-                                <form>
+                                <form hx-trigger="submit" hx-post="/comment/{{ .ID }}" hx-on-htmx-after-request="if(event.detail.successful) this.reset()" hx-target="#comment-list" hx-swap="afterbegin">
                                    <input type='hidden' name='csrf_token' value='{{$out.CSRFToken}}'>
                                    <div class="form-group">
                                       <textarea class="form-control" name="comment" placeholder="Add a comment..."></textarea>
                                    </div>
-                                   <button hx-post="/comment/{{ .ID }}" hx-target="this" hx-swap="none" class="btn btn-sm btn-primary">Comment</button>
+                                   <button type="submit" class="btn btn-sm btn-primary">Comment</button>
                                 </form>
+                                <ul id="comment-list"></ul>
                                     {{ range .Comments }}
+                                        {{block "comment-list-element" .}}
                                         <div class="regular-molt mini-molt   border-dark px-3 py-2 mb-2 d-flex flex-row absolute-container">
                                             <div class="mini-molt-profile-box   ">
                                                 <a href="/crabs/{{ .PK }}" class="zindex-front">
@@ -238,9 +240,6 @@
                                             <div class="mini-molt-text-box w-100 h-100 px-2">
                                                 <div class="mini-molt-credentials   absolute-container">
                                                     <div class="mini-molt-credentials-text ">
-{{/*                                                        <a href="/crabs/" class="mini-molt-display-name zindex-front">*/}}
-{{/*                                                            {{  .PK }}*/}}
-{{/*                                                        </a>*/}}
                                                     <span class="mini-molt-username zindex-front">@{{ slice .PK 3 }}</span>
                                                     <span class="mini-molt-timestamp zindex-front">· {{slice .SK 14 19}}</span>
                                                    </div>
@@ -391,7 +390,9 @@
                                             <!-- Molt page link -->
                                             <a href="/user/namename/status/12" class="absolute-fill" draggable="false"></a>
                                         </div>
+                                        {{ end }}
                                     {{ end }}
+                                    </ul>
                                 </div>
                                 <!-- spacer -->
                                 <div class="d-inline-block w-100 p-5 my-5 text-muted text-molt text-center"></div>

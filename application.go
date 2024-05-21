@@ -55,7 +55,7 @@ type conf struct {
 func main() {
 	var cfg conf
 	var err error
-	prod := false
+	prod := true
 	if !prod {
 		// Environment variables are simpler than SSM..
 		cfg.db.tableName = goDotEnvVariable("TABLE_NAME")

@@ -23,14 +23,7 @@ type Comment struct {
 }
 
 // PUT - Comment on a molt by crab
-func (m CommentModel) Insert(crabUsername string, content string, molt *Molt) error {
-	c := &Comment{
-		PK:      fmt.Sprintf("MC#%s", crabUsername),                                 //  -> getCommentsForMolt()
-		SK:      fmt.Sprintf("MC#%s", fmt.Sprintf(time.Now().Format(time.RFC3339))), // latest order
-		GSI4PK:  fmt.Sprintf("MC#%s", molt.ID),                                      // get comments on a molt id
-		GSI4SK:  fmt.Sprintf("MC#%s", fmt.Sprintf(time.Now().Format(time.RFC3339))),
-		Content: content,
-	}
+func (m CommentModel) Insert(c *Comment, molt *Molt, crabUsername string) error {
 	comment, err := attributevalue.MarshalMap(c)
 	if err != nil {
 		fmt.Println("ERR marshalling: ", err)
@@ -43,7 +36,7 @@ func (m CommentModel) Insert(crabUsername string, content string, molt *Molt) er
 			PK:       fmt.Sprintf("N#%s", ownerID),                      // alert original author of molt
 			SK:       fmt.Sprintf("N#%s#%s#%s", ownerID, "MC", molt.ID), // what if multiple comments then it would overwrite?
 			UserName: crabUsername,
-			Content:  content,
+			Content:  c.Content,
 			Viewed:   false,
 			TTL:      fmt.Sprintf("%d", time.Now().Add(time.Hour*24*7).Unix()), // delete notifs in a week to keep table smaller
 		})

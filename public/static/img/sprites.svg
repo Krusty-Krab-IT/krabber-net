@@ -176,4 +176,7 @@
   <symbol xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" viewBox="-5 -5 24 24" id="arrow-left">
     <path d="M3.414 7.657l3.95 3.95A1 1 0 015.95 13.02L.293 7.364a.997.997 0 010-1.414L5.95.293a1 1 0 111.414 1.414l-3.95 3.95H13a1 1 0 010 2H3.414z"></path>
   </symbol>
+  <symbol xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" viewBox="-5 -2 24 24" id="water-drop">
+    <path d="M2 13a5 5 0 0010 0c0-1.726-1.66-5.031-5-9.653C3.66 7.969 2 11.274 2 13zM7 0c4.667 6.09 7 10.423 7 13a7 7 0 01-14 0c0-2.577 2.333-6.91 7-13z"></path>
+  </symbol>
 </svg>

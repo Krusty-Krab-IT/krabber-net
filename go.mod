@@ -4,11 +4,13 @@ go 1.20
 
 require (
 	github.com/alexedwards/scs/v2 v2.7.0
+	github.com/aws/aws-sdk-go v1.53.7
 	github.com/aws/aws-sdk-go-v2 v1.26.1
 	github.com/aws/aws-sdk-go-v2/config v1.25.6
 	github.com/aws/aws-sdk-go-v2/credentials v1.16.5
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.12.4
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.25.4
+	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-mail/mail/v2 v2.3.0
 	github.com/go-playground/form/v4 v4.2.1
 	github.com/google/uuid v1.4.0

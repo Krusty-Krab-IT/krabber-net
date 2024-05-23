@@ -21,8 +21,7 @@ func (app *Application) isAuthenticated(r *http.Request) bool {
 }
 
 // Create an newTemplateData() helper, which returns a pointer to a templateData
-// struct initialized with the current year. Note that we're not using the
-// *http.Request parameter here at the moment, but we will do later in the book.
+// struct initialized with the current year.
 func (app *Application) NewTemplateData(r *http.Request) templateData {
 	return templateData{
 		Flash:           app.SessionManager.PopString(r.Context(), "flash"),
@@ -66,8 +65,7 @@ func (app *Application) serverError(w http.ResponseWriter, r *http.Request, err 
 }
 
 // The clientError helper sends a specific status code and corresponding description
-// to the crab. We'll use this later in the book to send responses like 400 "Bad
-// Request" when there's a problem with the request that the crab sent.
+// to the crab
 func (app *Application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
 }

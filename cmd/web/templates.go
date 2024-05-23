@@ -15,6 +15,7 @@ type templateData struct {
 	Molt            models.Molt
 	Molts           []models.Molt
 	Likes           []models.Like
+	Crab            *models.Crab
 	Crabs           []models.Crab
 	Follows         models.Follow
 	Notifications   []models.Notification
@@ -59,7 +60,7 @@ func NewTemplateCache() (map[string]*template.Template, error) {
 		// Create a slice containing the filepath patterns for the templates we
 		// want to parse.
 		patterns := []string{
-			"html/pages/moltinTime.html",
+			"html/pages/profile.html",
 			"html/base.html",
 			"html/partials/*.html",
 			page,

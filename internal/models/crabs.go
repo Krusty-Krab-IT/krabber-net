@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -8,9 +9,15 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/globalsign/mgo/bson"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"krabber.net/internal/models/validator"
+	"mime/multipart"
+	"net/http"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -68,6 +75,48 @@ func (c *Crab) IsAnonymous() bool {
 type password struct {
 	plaintext *string
 	hash      []byte
+}
+
+func (m CrabModel) UpdateAvatar(c *Crab, s *session.Session, file multipart.File, fileHeader *multipart.FileHeader, bucket string) (string, error) {
+	size := fileHeader.Size
+	buffer := make([]byte, size)
+	file.Read(buffer)
+	// create a unique file name for the file
+	tempFileName := c.ID + "/" + bson.NewObjectId().Hex() + filepath.Ext(fileHeader.Filename)
+	// filename, content-type and storage class of the file
+	// you're uploading
+	_, err := s3.New(s).PutObject(&s3.PutObjectInput{
+		Bucket:               aws.String(bucket),
+		Key:                  aws.String(tempFileName),
+		ACL:                  aws.String("private"), // could be private if you want it to be access by only authorized users
+		Body:                 bytes.NewReader(buffer),
+		ContentLength:        aws.Int64(int64(size)),
+		ContentType:          aws.String(http.DetectContentType(buffer)),
+		ContentDisposition:   aws.String("attachment"),
+		ServerSideEncryption: aws.String("AES256"),
+		StorageClass:         aws.String("INTELLIGENT_TIERING"),
+	})
+	if err != nil {
+		return "", err
+	}
+
+	_, err = m.SVC.ItemTable.UpdateItem(context.TODO(), &dynamodb.UpdateItemInput{
+		TableName: aws.String(TableName),
+		Key: map[string]types.AttributeValue{
+			"PK": &types.AttributeValueMemberS{Value: c.PK},
+			"SK": &types.AttributeValueMemberS{Value: c.SK},
+		},
+		UpdateExpression: aws.String(fmt.Sprintf("set %s = :%s", "avatar", "avatar")),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			fmt.Sprintf(":%s", "avatar"): &types.AttributeValueMemberS{Value: tempFileName},
+		},
+	})
+	fmt.Printf("ERROr Updating Crab avatar: %v", err)
+	if err != nil {
+		panic(err)
+	}
+
+	return tempFileName, err
 }
 
 func (m CrabModel) Show() ([]Crab, error) {
@@ -359,54 +408,3 @@ func ValidateCrab(v *validator.Validator, crab *Crab) {
 		panic("missing password hash for user")
 	}
 }
-
-//
-//// Delete - removes a user from Lobsterer DB & Cognito
-//func (u *User) Delete(svc ItemService, tablename string) error {
-//	return nil
-//}
-
-// Exists - checks if username is already taken
-//func Exists(name string, svc ItemService, tablename string) (bool, error) {
-//	selectedKeys := map[string]string{
-//		"PK": fmt.Sprintf(PKFormat, name),
-//		"SK": fmt.Sprintf(SKFormat, name),
-//	}
-//	key, err := attributevalue.MarshalMap(selectedKeys)
-//
-//	data, err := svc.ItemTable.GetItem(context.TODO(), &dynamodb.GetItemInput{
-//		TableName: aws.String(tablename),
-//		Key:       key,
-//	},
-//	)
-//	if err != nil {
-//		return false, fmt.Errorf("GetItem: %v\n", err)
-//	}
-
-//	if models.Item == nil {
-//		return false, fmt.Errorf("GetItem: Data not found.\n")
-//	}
-//
-//	return true, nil
-//}
-
-//func (c CrabModel) GetByName(name string) (Crab, error) {
-//	crab := make([]Crab, 0)
-//	ut, err := c.SVC.ItemTable.Query(context.TODO(), &dynamodb.QueryInput{
-//		TableName:              aws.String(TableName),
-//		IndexName:              aws.String("GSI1"),
-//		KeyConditionExpression: aws.String("GSI1PK = :gsi1pk"),
-//		ExpressionAttributeValues: map[string]types.AttributeValue{
-//			":gsi1pk": &types.AttributeValueMemberS{Value: name},
-//		},
-//	})
-//	if err != nil {
-//		panic(err)
-//	}
-//	err = attributevalue.UnmarshalListOfMaps(ut.Items, &crab)
-//	if err != nil {
-//		fmt.Errorf("UnmarshalMap: %v\n", err)
-//	}
-//
-//	return crab[0], nil
-//}

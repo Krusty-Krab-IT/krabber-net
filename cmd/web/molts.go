@@ -146,12 +146,16 @@ func (app *Application) moltRemoltPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) moltView(w http.ResponseWriter, r *http.Request) {
+	crabID := app.SessionManager.GetString(r.Context(), "authenticatedCrabID")
+	c, err := app.Crabs.ByID(crabID)
+
 	params := httprouter.ParamsFromContext(r.Context())
 	id := params.ByName("id")
 	if id == "" {
 		app.NotFound(w)
 		return
 	}
+
 	molt, err := app.Molts.ByID(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -164,6 +168,7 @@ func (app *Application) moltView(w http.ResponseWriter, r *http.Request) {
 
 	data := app.NewTemplateData(r)
 	data.Molt = *molt
+	data.Crab = c
 	comments, err := app.Comments.On(data.Molt.ID)
 	if err != nil {
 		app.serverError(w, r, err)
@@ -172,8 +177,6 @@ func (app *Application) moltView(w http.ResponseWriter, r *http.Request) {
 	for _, c := range comments {
 		data.Molt.Comments = append(data.Molt.Comments, c)
 	}
-	// if notification then update it here...?
-	// or as fetching notifications mark them all as read
 	app.Render(w, r, http.StatusOK, "view.html", data)
 }
 

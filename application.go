@@ -56,8 +56,8 @@ func main() {
 	var cfg conf
 	var err error
 	prod := false
+
 	if !prod {
-		// Environment variables are simpler than SSM..
 		cfg.db.tableName = goDotEnvVariable("TABLE_NAME")
 		cfg.db.region = goDotEnvVariable("REGION")
 		cfg.db.sac = goDotEnvVariable("DB_SAC")
@@ -75,7 +75,6 @@ func main() {
 	}
 
 	if prod {
-
 		cfg.db.tableName = os.Getenv("TABLE_NAME")
 		cfg.db.region = os.Getenv("REGION")
 		cfg.db.sac = os.Getenv("DB_SAC")
@@ -93,7 +92,6 @@ func main() {
 	}
 
 	addr := flag.String("addr", ":5000", "HTTP network address") // default:5000
-	//logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	svc := newItemService(cfg)
 	// Initialize a new template cache...

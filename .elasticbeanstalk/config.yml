@@ -10,6 +10,8 @@ branch-defaults:
     environment: crabber-net-production
   notifications:
     environment: crabber-net-production
+  profile-page:
+    environment: crabber-net-production
   refactor-to-tailwind-css:
     environment: crabber-net-production
   updating-docs:

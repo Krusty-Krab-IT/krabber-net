@@ -37,7 +37,7 @@ func (app *Application) Routes() http.Handler {
 	router.Handler(http.MethodPost, "/unfollow/:id", dynamic.ThenFunc(app.followDeletePost))
 
 	// PROFILE
-	router.Handler(http.MethodGet, "/moltinTime", dynamic.ThenFunc(app.moltinTime))
+	router.Handler(http.MethodGet, "/profile", dynamic.ThenFunc(app.profile))
 	router.Handler(http.MethodGet, "/notifications", dynamic.ThenFunc(app.notifications))
 	router.Handler(http.MethodGet, "/settings", dynamic.ThenFunc(app.settings))
 
@@ -58,6 +58,7 @@ func (app *Application) Routes() http.Handler {
 
 	// CRAB
 	router.Handler(http.MethodGet, "/crab/signup", dynamic.ThenFunc(app.crabSignup))
+	router.Handler(http.MethodPost, "/crab/avatar", dynamic.ThenFunc(app.crabUpdateAvatar))
 	router.Handler(http.MethodGet, "/crabs", dynamic.ThenFunc(app.allCrabs))
 	router.Handler(http.MethodPost, "/crab/signup", dynamic.ThenFunc(app.crabSignupPost))
 	router.Handler(http.MethodGet, "/crab/login", dynamic.ThenFunc(app.crabLogin))

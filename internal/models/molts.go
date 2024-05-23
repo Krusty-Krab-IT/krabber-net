@@ -16,39 +16,41 @@ type MoltModel struct {
 }
 
 type Molt struct {
-	ID           string    `dynamodbav:"id"`
-	Comments     []Comment // added now whenever retrieving molts will also get the comments associated with it
-	Likes        []Like
-	PK           string `dynamodbav:"PK"`
-	SK           string `dynamodbav:"SK"`
-	GSI3PK       string `dynamodbav:"GSI3PK"`
-	GSI3SK       string `dynamodbav:"GSI3SK"`
-	GSI5PK       string `dynamodbav:"GSI5PK"`
-	GSI5SK       string `dynamodbav:"GSI5SK"`
-	Author       string `dynamodbav:"author"`
-	CommentCount int    `dynamodbav:"comment_count"`
-	Content      string `dynamodbav:"content"`
-	Deleted      bool   `dynamodbav:"deleted"`
-	LikeCount    int    `dynamodbav:"like_count"`
-	Remolt       bool   `dynamodbav:"remolt"`
-	RemoltCount  int    `dynamodbav:"remolt_count"`
-	Url          string `dynamodbav:"url"`
+	ID            string `dynamodbav:"id"`
+	CreatorAvatar string `dynamodbav:"creator_avatar"`
+	Comments      []Comment
+	Likes         []Like
+	PK            string `dynamodbav:"PK"`
+	SK            string `dynamodbav:"SK"`
+	GSI3PK        string `dynamodbav:"GSI3PK"`
+	GSI3SK        string `dynamodbav:"GSI3SK"`
+	GSI5PK        string `dynamodbav:"GSI5PK"`
+	GSI5SK        string `dynamodbav:"GSI5SK"`
+	Author        string `dynamodbav:"author"`
+	CommentCount  int    `dynamodbav:"comment_count"`
+	Content       string `dynamodbav:"content"`
+	Deleted       bool   `dynamodbav:"deleted"`
+	LikeCount     int    `dynamodbav:"like_count"`
+	Remolt        bool   `dynamodbav:"remolt"`
+	RemoltCount   int    `dynamodbav:"remolt_count"`
+	Url           string `dynamodbav:"url"`
 }
 
 // Insert a molt into the db
 func (m MoltModel) Insert(molt *Molt) error {
 	item, err := attributevalue.MarshalMap(
 		&Molt{
-			ID:      molt.ID,
-			PK:      molt.PK,
-			SK:      molt.SK,
-			GSI3PK:  molt.GSI3PK,
-			GSI3SK:  molt.GSI3SK,
-			GSI5PK:  molt.GSI5PK,
-			GSI5SK:  molt.GSI5SK,
-			Author:  molt.Author,
-			Content: molt.Content,
-			Deleted: molt.Deleted,
+			ID:            molt.ID,
+			PK:            molt.PK,
+			SK:            molt.SK,
+			CreatorAvatar: molt.CreatorAvatar,
+			GSI3PK:        molt.GSI3PK,
+			GSI3SK:        molt.GSI3SK,
+			GSI5PK:        molt.GSI5PK,
+			GSI5SK:        molt.GSI5SK,
+			Author:        molt.Author,
+			Content:       molt.Content,
+			Deleted:       molt.Deleted,
 		})
 	if err != nil {
 		fmt.Println("ERROR MARSHALLING: ", err)
@@ -77,6 +79,7 @@ func (m MoltModel) Insert(molt *Molt) error {
 // By ID for individual viewing
 func (m MoltModel) ByID(id string) (*Molt, error) {
 	molt := make([]Molt, 0)
+	fmt.Println("CALLING BY ID HERE HO, ID:", id)
 	ut, err := m.SVC.ItemTable.Query(context.TODO(), &dynamodb.QueryInput{
 		TableName:              aws.String(TableName),
 		IndexName:              aws.String("GSI5"),
@@ -88,13 +91,18 @@ func (m MoltModel) ByID(id string) (*Molt, error) {
 		},
 	})
 	if err != nil {
-		panic(err)
+		fmt.Printf("HERE BY ID ERROR: %v", err)
 	}
 	err = attributevalue.UnmarshalListOfMaps(ut.Items, &molt)
+	fmt.Printf("HERE %v", err)
 	if err != nil {
 		fmt.Errorf("UnmarshalMap: %v\n", err)
+		return nil, err
 	}
-	return &molt[0], nil
+	if len(molt) > 0 {
+		return &molt[0], nil
+	}
+	return nil, nil
 }
 
 // Get a molt by Author and ID for updates

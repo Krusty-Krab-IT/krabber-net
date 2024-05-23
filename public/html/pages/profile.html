@@ -1,0 +1,487 @@
+{{define "title"}}Molts{{end}}
+
+{{ define "page" }}
+<!DOCTYPE html>
+<html lang="en">
+{{ template "header" .}}
+<body class="bg-dark text-light">
+    <div class="container-fluid vh-100 master-container">
+        <div class="row h-100 justify-content-center">
+        {{ template "nav" . }}
+            <!-- Edit image description modal -->
+            <div class="modal fade" id="image_description_modal" tabindex="-1" role="dialog" aria-labelledby="imageDescriptionModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header py-2 border-dark modal-left-align">
+                            <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>Editing image description</strong>
+                        </div>
+                        <div class="modal-body row m-1 w-100 d-block">
+                            <form method="POST">
+                                <input type="hidden" name="user_action" value="change_image_description">
+                                <input type="hidden" name="img_src" value="">
+                                <button onclick="submitImageDescription(this)" type="button" class="btn btn-primary rounded-pill float-right">
+                                    <strong>
+                                        Update
+                                    </strong>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Main Content -->
+            <div class="col col-lg-6 content border-dark border-left border-right p-0" id="main-panel">
+                <div class="border-dark border-bottom-2" id="content-heading">
+                        {{if not .IsAuthenticated}}
+                        <div class="alert alert-danger" role="alert">
+                            Crab isn't logged in...
+                        </div>
+                       {{ end }}
+
+                        {{ if not .Molts }}
+                            <div class="alert alert-info" role="alert">
+                                You haven't molted anything or followed anyone yet. <a href="/seas" class="alert-link">Click
+                                    here</a> to explore.
+                            </div>
+                        {{ end }}
+
+                </div>
+                    <div id="content-body" onscroll="updateScrollback();" class="h-100">
+
+                    <!-- Profile bio box -->
+                    <div class="profile-box border-bottom border-dark">
+                        <div class="profile-box-banner">
+                            <img class="profile-banner" src="../../static/img/banner.png"/>
+                        </div>
+                        <div class="profile-box-bio px-2 pt-2">
+                            <div class="profile-box-avatar d-block w-25 force-square profile-box-shadow rounded-circle ">
+                                {{ if .IsAuthenticated }}
+                                    <div class="avatar-edit-button clickable w-100 h-100 zindex-front" onclick="toggleModal('#avatar_modal');">
+                                        <svg class="text-light" width="46" height="46" data-jam="camera-f">
+                                            <use href="#camera-f"></use>
+                                        </svg>
+                                    </div>
+                                {{ end }}
+                                {{ if .Crab.Avatar }}
+                                    <div class="rounded-circle profile-picture shadow-expand">
+                                        <img src="https://krabber-krab-avatars.s3.amazonaws.com/{{ .Crab.Avatar }}"
+                                             style="border-radius: 100%;">
+                                    </div>
+                                {{ end }}
+
+                                {{ if not .Crab.Avatar }}
+                                    <div class="rounded-circle profile-picture shadow-expand">
+                                           <img src="../../static/img/crab_illustration.jpg" style="border-radius: 100%;">
+                                    </div>
+                                {{ end }}
+                            </div>
+                            <div class="profile-box-follow-row d-flex flex-row justify-content-end">
+                                <!-- Display correct follow button if page is not current user -->
+                                {{ if not .IsAuthenticated }}
+                                    <button name="user_action" value="follow" type="submit" class="btn btn-outline-primary rounded-pill follow-btn">
+                                        <strong>
+                                            Follow
+                                        </strong>
+                                    </button>
+                                    <button name="user_action" value="unfollow" type="submit" class="btn btn-primary rounded-pill unfollow-btn">
+                                        <strong class="defalt-text">Unfollow</strong>
+                                    </button>
+                                {{ end }}
+                                <form method="POST" onsubmit="return savedescription()">
+                                    <!-- Fixed values -->
+                                    <input type="hidden" name="user_action" value="update_description">
+                                    <input type="hidden" name="user_id" value="USER-ID">
+                                    <!-- Dynamic values -->
+                                    <input type="hidden" name="display_name" value="">
+                                    <input type="hidden" name="description" value="">
+                                    <button type="submit" id="save-button" class="btn btn-primary rounded-pill hidden"><strong>Save changes</strong></button>
+                                </form>
+                            </div>
+                            <div class="profile-box-names mt-2 mt-md-4 mt-lg-2">
+                                {{ if .IsAuthenticated }}
+                                    <strong class="profile-box-display-name">
+                                        {{ .Crab.UserName }}
+                                    </strong>
+                                {{ end }}
+                                {{ if not .IsAuthenticated }}
+                                    <strong class="profile-box-display-name">
+                                        {{ .Crab.UserName }}
+                                    </strong>
+                                {{ end }}
+                                <!-- user verified -->
+                                {{ if .IsAuthenticated }}
+                                    <a title="This user is verified"></a>
+                                {{ end }}
+                                <p class="text-muted mb-1">@{{ .Crab.UserName }}
+                                </p>
+                            </div>
+                            <div class="profile-box-description w-100">
+                                <div id="rich-description">
+                                    <p>Stay Crabby</p>
+                                </div>
+                            </div>
+                            <div class="profile-box-join-date text-muted mt-1">
+                                <!-- User Website -->
+                                {{ if .IsAuthenticated }}
+                                    <div class="d-inline-block mr-2" id="user-website">
+
+                                        <svg class="mini-molt-action-icon pb-1" width="16" height="20" data-jam="map-marker">
+                                            <use href="/static/img/sprites.svg?version=1704178675#link"></use>
+                                        </svg>
+                                        <a class="text-primary" href="https://github.com/Krusty-Krab-IT/krabber-net" target="_blank" rel="nofollow">Krabber.net</a>
+                                    </div>
+                                {{ end }}
+
+                                <!-- Crabber Birthday -->
+                                <div class="d-inline-block mr-2" id="join-date">
+                                    <svg class="mini-molt-action-icon pb-1" width="16" height="20" data-jam="calendar">
+                                        <use href="#calendar"></use>
+                                    </svg>
+                                    Joined {{ slice .Crab.Created 0 10 }}
+                                </div>
+                            </div>
+
+                            <div class="profile-box-following mt-1">
+                                <a class="text-inherit" href="/crabs">
+                                    <div class="d-inline mr-2"><strong>{{ .Crab.FollowingCount }}</strong>
+                                        <span class="text-muted">Following</span></div></a>
+                                <a class="text-inherit" href="/crabs">
+                                    <div class="d-inline mr-2"><strong>{{ .Crab.FollowerCount }} </strong>
+                                        <span class="text-muted">Follower</span></a></div>
+
+                            <!-- "Followers you know" section -->
+                            {{ if .IsAuthenticated }}
+                                {{ if not .IsAuthenticated }}
+                                    <div class="following-mutuals text-muted mt-2">
+                                        <a class="text-muted" href="/user/USER-DISPLAY/followers_you_know">
+                                            <div class="featured-mutuals mr-2">
+                                                <div class="featured-mutual-avatar"
+                                                     src="user-avatar">
+                                                </div>
+                                            </div>
+                                            <span>Followed by</span>
+                                            <span><span>
+                                            <span>
+                                              and other you follow.
+                                            </span>
+                                        </a>
+                                    </div>
+                                {{ end }}
+                            {{ end }}
+                        </div>
+
+                        <!-- SHELL Section -->
+                        <div class="shell p-1 mt-1 mb-0 jumbotron" id="shell-dropdown">
+                            <!-- Shell toggle -->
+                            <button id="shell-toggle" class="btn btn-trans pl-0 w-100 text-left">
+
+                                <svg class="shell-toggle-chevron" width="24" height="24" data-jam="chevron-right">
+                                    <use href="#chevron-right"></use>
+                                </svg>
+                                Full bio
+                            </button>
+
+                            <div id="shell-contents" class="shell-collapsed text-light-darker cool-scroll">
+                                <h5 class="mt-3">Stats</h5>
+                                <div class="rounded neue-card p-3">
+                                    <ul class="shell-stats pl-2 m-0">
+                                        <li><strong class="text-primary">{{ .Crab.MoltCount }}</strong> Molts published</li>
+                                        <li><strong class="text-primary">{{ .Crab.LikeCount }}</strong> Liked</li>
+                                        <li><strong class="d-inline-block text-primary">{{ .Crab.FollowerCount }}</strong> Followers</li>
+                                        <li><strong class="d-inline-block text-primary">{{ .Crab.FollowingCount }}</strong> Following</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Spacer -->
+                                <div class="d-inline-block w-100 my-1 text-muted text-molt text-center"></div>
+
+                            </div>
+
+                            <script async>
+                                var shellContents = $("#shell-contents");
+                                $("#shell-toggle").click(function () {
+                                    shellContents.toggleClass("shell-collapsed");
+                                    $(".shell-toggle-chevron").toggleClass("rotate-90");
+                                })
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <!-- all user's molts live here -->
+                <div id="content-body" class="h-100">
+                 <ul id="molt-list">
+                     {{ range .Molts  }}
+                        {{block "molt-list-element" . }}
+                           <div class="regular-molt mini-molt border-dark py-2 d-flex flex-row absolute-container border-bottom px-3">
+                                    <!-- Deleted or unavailable indicator -->
+                                        <!-- Profile box -->
+                                        {{ if eq .CreatorAvatar "" }}
+                                            <div class="mini-molt-profile-box">
+                                                    <img class="rounded-circle px43 profile-picture" src="../../static/img/crab_illustration.jpg">
+                                            </div>
+                                        {{ end }}
+
+                                        {{ if .CreatorAvatar }}
+                                            <div class="mini-molt-profile-box">
+                                                    <img class="rounded-circle px43 profile-picture" src="https://krabber-krab-avatars.s3.amazonaws.com/{{ .CreatorAvatar }}">
+
+                                            </div>
+                                        {{ end }}
+
+                                        <!-- Indicator box -->
+                                        <div class="mini-molt-text-box w-100 h-100 px-2">
+                                            <div class="mini-molt-credentials absolute-container">
+                                                    <div class="mini-molt-credentials-text">
+                                                        <!-- Display name -->
+                {{/*                                        <a class="mini-molt-display-name zindex-front" href="/user/namename">*/}}
+                {{/*                                            namename*/}}
+                {{/*                                        </a>*/}}
+                                                        <span class="mini-molt-username zindex-front">
+                                                            @{{ .Author }}
+                                                        </span>
+
+                                                        <!-- Molt age -->
+                                                        <span class="mini-molt-timestamp zindex-front">
+                                                            {{slice .GSI3PK 2 }}
+                                                        </span>
+
+                                                        <!-- Thread badge -->
+                                                        <span class="text-muted">·</span>
+                                                        <span class="thread-badge">
+                                                            Thread
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            <!-- Molt content -->
+                                            <div class="mini-molt-content">
+                                                        <p class="mb-2">
+                                                            <span class="zindex-front clickable" >
+                                                                {{ .Content }}
+                                                            </span>
+                                                        </p>
+                                                </div>
+                                            <div class="mini-molt-actions d-flex flex-row justify-content-between mr-md-5">
+                                                <div class="mini-molt-action reply rounded-circle zindex-front" >
+                                                <a href="/molt/view/{{.ID}}">
+                                                    <svg class="mini-molt-action-icon" width="19" height="19" data-jam="message">
+                                                        <use href="/static/img/sprites.svg?version=1704178675#message"></use>
+                                                    </svg>
+                                                    <span class="mini-molt-action-counter ml-1">
+                                                            {{ .CommentCount }}
+                                                    </span>
+                                                </a>
+                                                </div>
+
+                                                <!-- Remolt dropdown -->
+                                                <div class="dropdown">
+                                                    <!-- Remolt dropdown button -->
+                                                    <div class="zindex-front mini-molt-action remolt" href="#" role="button" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                                                        <svg class="mini-molt-action-icon" width="19" height="19" data-jam="repeat">
+                                                            <use href="/static/img/sprites.svg?version=1704178675#repeat"></use>
+                                                        </svg>
+                                                        <span class="mini-molt-action-counter ml-1">
+                                                                {{ .RemoltCount }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Like button -->
+                                                <form method="POST">
+                {{/*                                    <input type='hidden' name='csrf_token' value='{{$out.CSRFToken}}'>*/}}
+                                                    <div class="mini-molt-action like zindex-front">
+                                                        <!-- Fake like button (for welcome page showcase) -->
+
+                                                            <svg class="mini-molt-action-icon" width="19" height="19" data-jam="heart">
+                                                                <use href="/static/img/sprites.svg?version=1704178675#heart"></use>
+                                                            </svg>
+
+                                                            <svg class="mini-molt-action-icon text-primary d-none" width="19" height="19" data-jam="heart-f">
+                                                                <use href="/static/img/sprites.svg?version=1704178675#heart-f"></use>
+                                                            </svg>
+                                                            <span class="mini-molt-action-counter ml-1">
+                                                                {{ .LikeCount }}
+                                                            </span>
+
+                                                    </div>
+                                                </form>
+
+                                                    <!-- Dropdown button -->
+                                                <div class="dropdown">
+                                                    <span class="zindex-front mini-molt-action reply" id="dropdownMenuLink" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+
+
+                                                <svg class="mini-molt-action-icon" width="19" height="19" data-jam="more-horizontal">
+                                                    <use href="/static/img/sprites.svg?version=1704178675#more-horizontal"></use>
+                                                </svg>
+
+                                                    </span>
+
+
+                                                        <div class="neue-card molt-dropdown dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                            <!-- Mod panel button -->
+
+
+
+                                                        </div>
+                                                     <!-- if current user -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                     <!-- if deleted or unavailable -->
+                                </div>
+                       {{ end }}
+                    {{ end }}
+                  </ul>
+                    <!-- Spacer -->
+                    <div class="d-inline-block w-100 p-5 my-5 text-muted text-molt text-center"></div>
+                </div>
+
+                <!-- Spacer -->
+                <div class="d-inline-block w-100 p-5 my-5 text-muted text-molt text-center"></div>
+
+                <!-- Avatar change popup -->
+                <div class="modal fade" id="avatar_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-dark">
+                            <div class="modal-header py-2 border-dark">
+                                <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong>Upload new avatar</strong>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted">Recommended size: 500x500</p>
+                                <!-- Avatar upload form -->
+                                <form id="uploadForm" action="/crab/avatar" method="POST" enctype="multipart/form-data">
+                                    <input type='hidden' name='csrf_token' value='{{ .CSRFToken }}'>
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <div class="d-inline-block profile-file-select">
+                                            <input id="upload" type="file" name="photofile" class="text-muted file-input" onchange="form.submit()" accept="image/x-png,image/jpeg, image/png" required>
+                                        </div>
+                                        <div class="d-inline-block">
+                                            <button type="submit" onclick="$(this).children().text('Posting..')" class="btn btn-primary rounded-pill mini-btn"><strong>Upload</strong></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner change popup -->
+                <div class="modal fade" id="banner_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content bg-dark">
+                            <div class="modal-header py-2 border-dark">
+                                <button type="button" class="close text-primary" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong>Upload new banner</strong>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-muted">Recommended size: 1500x500</p>
+                                <!-- Banner upload form -->
+                                <form id="uploadForm" action="/user/banner" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="user_action" value="change_banner">
+                                    <div class="d-flex flex-row justify-content-between">
+                                        <div class="d-inline-block profile-file-select">
+                                            <input id="bannerupload" type="file" name="bannerfile" class="text-muted file-input" onchange="form.submit()" accept="image/x-png,image/jpeg, image/png" required>
+                                        </div>
+                                        <div class="d-inline-block">
+                                            <button type="submit" onclick="$(this).children().text('Posting..')" class="btn btn-primary rounded-pill mini-btn"><strong>Upload</strong></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script async>
+                    // Molt/Like tab controller
+                    function switchTo(tab) {
+                        var tabs = ['molts', 'replies', 'likes', 'trophies']
+                        // Reset all buttons to inactive and tabs to hidden
+                        tabs.forEach(tabName => {
+                            $(`#${tabName}-btn`).removeClass("active");
+                            $(`#${tabName}`).addClass("d-none");
+
+                        });
+
+                        // Switch active button
+                        $(`#${tab}-btn`).addClass("active");
+                        // Switch tab
+                        $(`#${tab}`).removeClass("d-none");
+                        // Load content if necessary
+                        let loadStatus = $(`#${tab} meta[name=${tab}-load-status]`).attr('content');
+                        if (loadStatus == 'false') {
+                            let loadFunc = $(`#${tab} meta[name=${tab}-load-func]`).attr('content');
+                            window[loadFunc]();
+                        }
+
+                        // Update tab parameter in location/history
+                        let newLocation = new URL(window.location);
+                        newLocation.searchParams.set('tab', tab);
+                        window.history.pushState({}, '', newLocation.href);
+                    }
+
+                    function showEditor(focus) {
+                        $('strong.profile-box-display-name').addClass('active');
+                        $('div#editable-description').removeClass('hidden');
+                        $('#save-button').removeClass('hidden');
+
+                        if (focus != undefined) {
+                            if (focus == 'description') {
+                                let descriptionEditor = document.getElementById('description-editor');
+                                descriptionEditor.focus();
+                                descriptionEditor.setSelectionRange(
+                                    descriptionEditor.value.length,
+                                    descriptionEditor.value.length
+                                );
+                            }
+                            else if (focus == 'name') {
+                                let nameEditor = $('.profile-box-display-name')[0];
+                                nameEditor.focus();
+                            }
+                        }
+                    }
+
+                    function savedescription() {
+                        let displayName = $('.profile-box-display-name')[0].innerText.trim();
+                        let description = document.getElementById('description-editor').value.trim();
+
+                        // Verify lengths
+                        if (displayName.length < 1) {
+                            alert('Display name cannot be empty.')
+                            return false;
+                        }
+                        if (description.length < 1) {
+                            alert('Description cannot be empty.')
+                            return false;
+                        }
+
+                        // Commit values to hidden inputs
+                        $('[name="display_name"]').val(displayName)
+                        $('[name="description"]').val(description)
+
+                        // Submit form
+                        return true;
+                    }
+                </script>
+
+            </div>
+
+        </div>
+        <!-- Additional Panel -->
+        {{ template "search" . }}
+   </div>
+</body>
+</html>
+{{ end }}

@@ -98,12 +98,11 @@ func (m MoltModel) GetTrenchMolts(trench []Trench) []Molt {
 	for _, t := range trench {
 		molt, err := m.ByID(t.SK[2:]) // delete the time stamp not needed in insert
 		if err != nil {
-			fmt.Printf("err %s", err)
+			fmt.Printf("Error trench molts %s", err)
 		}
-		molts = append(molts, *molt)
+		if molt != nil {
+			molts = append(molts, *molt)
+		}
 	}
 	return molts
 }
-
-// Build - For each SK[:2] -> do get by id
-// return slice of molts

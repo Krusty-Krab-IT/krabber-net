@@ -8,6 +8,12 @@ func (app *Application) notifications(w http.ResponseWriter, r *http.Request) {
 		app.NotFound(w)
 		return
 	}
+	// get crab by ID
+	c, err := app.Crabs.ByID(id)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
 	notifications, err := app.Notifications.Show(id) // get the crabs notifications
 	if err != nil {
 		app.serverError(w, r, err)
@@ -15,7 +21,8 @@ func (app *Application) notifications(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := app.NewTemplateData(r)
-	data.Notifications = notifications // copy stored
+	data.Notifications = notifications
+	data.Crab = c
 	// render the view
 	// but before that update each notification to 'viewed' == true
 	app.Notifications.MarkAsViewed(notifications) // permanent update so only show once... otherwise deleted in 7 days

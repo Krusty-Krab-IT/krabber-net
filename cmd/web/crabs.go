@@ -3,9 +3,14 @@ package web
 import (
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"krabber.net/internal/models"
 	"krabber.net/internal/models/validator"
+	"log"
 	"net/http"
+	"os"
 )
 
 type crabActivateForm struct {
@@ -157,6 +162,46 @@ func (app *Application) crabActivatePost(w http.ResponseWriter, r *http.Request)
 
 }
 
+func (app *Application) crabUpdateAvatar(w http.ResponseWriter, r *http.Request) {
+	crabID := app.SessionManager.GetString(r.Context(), "authenticatedCrabID")
+	c, err := app.Crabs.ByID(crabID)
+	maxSize := int64(1024000) // allow only 1MB of file size
+
+	err = r.ParseMultipartForm(maxSize)
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintf(w, "Image too large. Max Size: %v", maxSize)
+		return
+	}
+
+	file, fileHeader, err := r.FormFile("photofile")
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintf(w, "Could not get uploaded file")
+		return
+	}
+	defer file.Close()
+
+	s, err := session.NewSession(&aws.Config{
+		Region: aws.String(os.Getenv("REGION")),
+		Credentials: credentials.NewStaticCredentials(
+			os.Getenv("DB_AKID"),
+			os.Getenv("DB_SAC"),
+			""),
+	})
+	if err != nil {
+		fmt.Fprintf(w, "Could not session: %v", err)
+	}
+	bucketName := os.Getenv("S3")
+	_, err = app.Crabs.UpdateAvatar(c, s, file, fileHeader, bucketName)
+	if err != nil {
+		fmt.Fprintf(w, "Could not update file and crab url: %v", err)
+	}
+
+	// And redirect the crab to the login page.
+	http.Redirect(w, r, "/profile", http.StatusSeeOther)
+}
+
 func (app *Application) crabLogin(w http.ResponseWriter, r *http.Request) {
 	data := app.NewTemplateData(r)
 	data.Form = crabLoginForm{}
@@ -240,7 +285,7 @@ func (app *Application) crabLoginPost(w http.ResponseWriter, r *http.Request) {
 	// Encode the token to JSON and send it in the response along with a 201 Created
 	// status code.
 	// Redirect the crab to the create molt page.
-	http.Redirect(w, r, "/moltinTime", http.StatusSeeOther)
+	http.Redirect(w, r, "/profile", http.StatusSeeOther)
 }
 
 func (app *Application) crabLogoutPost(w http.ResponseWriter, r *http.Request) {

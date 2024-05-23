@@ -41,9 +41,15 @@
     </form>
 
     <!-- Profile button -->
-    <form action="/moltinTime">
+    <form action="/profile">
         <button type="submit" class="btn btn-secondary rounded-pill mx-auto mx-lg-0 mt-2" id="nav-active">
-          <img class="rounded-circle px28 profile-picture d-inline-block valign-middle" src="../../static/img/crab_illustration.jpg">
+            {{ if .Crab.Avatar}}
+                <img class="rounded-circle px28 profile-picture d-inline-block valign-middle" src="https://krabber-krab-avatars.s3.amazonaws.com/{{ .Crab.Avatar }}">
+            {{ end }}
+            {{ if not .Crab.Avatar }}
+                <img class="rounded-circle px28 profile-picture d-inline-block valign-middle" src="../../static/img/crab_illustration.jpg">
+            {{ end }}
+            <strong class="d-none d-lg-inline-block ml-2">Profile</strong>
         </button>
     </form>
 
@@ -68,9 +74,6 @@
                     <div class="modal-body" id="modal-content">
                     <div class="mini-compose-box px-3 py-2 d-flex flex-row focused">
                         <div class="mini-molt-profile-box">
-                            <a href="/crabs">
-                                <div class="rounded-circle px43 profile-picture" style="background-image: url('../../static/img/crab_illustration.jpg');"></div>
-                            </a>
                         </div>
                         <div class="mini-molt-text-box w-100 h-100 px-2">
                             <form hx-trigger="submit" hx-post="/molt/modal/create" hx-on-htmx-after-request="if(event.detail.successful) this.reset()" hx-target="#exampleModal" hx-swap="afterbegin">

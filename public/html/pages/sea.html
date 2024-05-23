@@ -19,11 +19,6 @@
             <div id="content-body" class="h-100">
                  <!-- The compose box lives here! -->
                     <div class="mini-compose-box border-bottom border-dark px-3 py-2 d-flex flex-row focused">
-                        <div class="mini-molt-profile-box">
-                            <a href="/crabs">
-                                <div class="rounded-circle px43 profile-picture" style="background-image: url('../../static/img/crab_illustration.jpg');"></div>
-                            </a>
-                        </div>
                     <div class="mini-molt-text-box w-100 h-100 px-2">
                         <form hx-trigger="submit" hx-post="/molt/create" hx-on-htmx-after-request="if(event.detail.successful) this.reset()" hx-target="this" hx-swap="none" >
                             <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
@@ -49,7 +44,13 @@
                             <!-- molt thread link -->
 {{/*                            <a class="zindex-front" href="/molt/view/{{.ID}}">*/}}
                                 <!-- Avatar image -->
-                                <img class="rounded-circle px43 profile-picture" src="../../static/img/crab_illustration.jpg">
+                                {{ if not .CreatorAvatar }}
+                                    <img class="rounded-circle px43 profile-picture" src="../../static/img/crab_illustration.jpg">
+                                {{ end }}
+                                {{ if .CreatorAvatar }}
+                                    <img class="rounded-circle px43 profile-picture" src="https://krabber-krab-avatars.s3.amazonaws.com/{{ .CreatorAvatar }}">
+                                {{ end }}
+
 {{/*                            </a>*/}}
                         </div>
 

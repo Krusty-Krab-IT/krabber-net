@@ -219,21 +219,26 @@ func (app *Application) moltCreatePost(w http.ResponseWriter, r *http.Request) {
 	author := app.SessionManager.GetString(r.Context(), "authenticatedCrabUserName")
 	KSUID := ksuid.GenerateKSUID()
 	id := uuid.New().String()
-
+	c, err := app.Crabs.ByID(crabID)
+	fmt.Printf("HERE's CRAB BY ID : %v", c)
+	if err != nil {
+		fmt.Printf("ERROR retrieving crab for molt %v", err)
+	}
 	now := time.Now()
 	y, mnth, d := now.Date()
 
 	molt := &models.Molt{
-		ID:      id,
-		PK:      fmt.Sprintf("M#%s", crabID),
-		SK:      fmt.Sprintf("M#%s#%s", crabID, KSUID),
-		GSI3PK:  "M#" + fmt.Sprintf("%d-%d-%d", y, int(mnth), d), //fmt.Sprintf("M#%s", time.Now().Format(time.RFC3339))
-		GSI3SK:  fmt.Sprintf("M#%s", id),
-		GSI5PK:  fmt.Sprintf("M#%s", id),
-		GSI5SK:  fmt.Sprintf("M#%s", id),
-		Author:  author,
-		Deleted: false,
-		Content: form.Content,
+		ID:            id,
+		PK:            fmt.Sprintf("M#%s", crabID),
+		SK:            fmt.Sprintf("M#%s#%s", crabID, KSUID),
+		GSI3PK:        "M#" + fmt.Sprintf("%d-%d-%d", y, int(mnth), d), //fmt.Sprintf("M#%s", time.Now().Format(time.RFC3339))
+		GSI3SK:        fmt.Sprintf("M#%s", id),
+		GSI5PK:        fmt.Sprintf("M#%s", id),
+		GSI5SK:        fmt.Sprintf("M#%s", id),
+		Author:        author,
+		CreatorAvatar: c.Avatar,
+		Deleted:       false,
+		Content:       form.Content,
 	}
 
 	res := app.Molts.Insert(molt)
@@ -251,8 +256,8 @@ func (app *Application) moltCreatePost(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	app.SessionManager.Put(r.Context(), "flash", "Molt successfully created!")
-	const moltinTime = "moltinTime.html"
-	file := app.TemplateCache[moltinTime]
+	const p = "profile.html"
+	file := app.TemplateCache[p]
 	if err != nil {
 		fmt.Printf("Error moltin time: %v", err)
 	}
@@ -283,21 +288,27 @@ func (app *Application) moltModalCreatePost(w http.ResponseWriter, r *http.Reque
 	author := app.SessionManager.GetString(r.Context(), "authenticatedCrabUserName")
 	KSUID := ksuid.GenerateKSUID()
 	id := uuid.New().String()
+	c, err := app.Crabs.ByID(crabID)
+	fmt.Printf("HERE's CRAB BY ID : %v", c)
+	if err != nil {
+		fmt.Printf("ERROR retrieving crab for molt %v", err)
+	}
 
 	now := time.Now()
 	y, mnth, d := now.Date()
 
 	molt := &models.Molt{
-		ID:      id,
-		PK:      fmt.Sprintf("M#%s", crabID),
-		SK:      fmt.Sprintf("M#%s#%s", crabID, KSUID),
-		GSI3PK:  "M#" + fmt.Sprintf("%d-%d-%d", y, int(mnth), d), //fmt.Sprintf("M#%s", time.Now().Format(time.RFC3339))
-		GSI3SK:  fmt.Sprintf("M#%s", id),
-		GSI5PK:  fmt.Sprintf("M#%s", id),
-		GSI5SK:  fmt.Sprintf("M#%s", id),
-		Author:  author,
-		Deleted: false,
-		Content: form.Content,
+		ID:            id,
+		PK:            fmt.Sprintf("M#%s", crabID),
+		SK:            fmt.Sprintf("M#%s#%s", crabID, KSUID),
+		GSI3PK:        "M#" + fmt.Sprintf("%d-%d-%d", y, int(mnth), d), //fmt.Sprintf("M#%s", time.Now().Format(time.RFC3339))
+		GSI3SK:        fmt.Sprintf("M#%s", id),
+		GSI5PK:        fmt.Sprintf("M#%s", id),
+		GSI5SK:        fmt.Sprintf("M#%s", id),
+		Author:        author,
+		CreatorAvatar: c.Avatar,
+		Deleted:       false,
+		Content:       form.Content,
 	}
 
 	res := app.Molts.Insert(molt)

@@ -1,11 +1,6 @@
 {{ define "modal "}}
     <div class="modal-body">
         <div class="mini-compose-box px-3 py-2 d-flex flex-row focused">
-            <div class="mini-molt-profile-box">
-                <a href="/crabs">
-                    <div class="rounded-circle px43 profile-picture" style="background-image: url('../../static/img/crab_illustration.jpg');"></div>
-                </a>
-            </div>
             <div class="mini-molt-text-box w-100 h-100 px-2">
                 <form hx-trigger="submit" hx-post="/molt/modal/create" hx-on-htmx-after-request="if(event.detail.successful) this.reset()" hx-swap="inneHTML">
                     <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>

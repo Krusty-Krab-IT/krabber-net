@@ -55,7 +55,7 @@ type conf struct {
 func main() {
 	var cfg conf
 	var err error
-	prod := true
+	prod := false
 	if !prod {
 		// Environment variables are simpler than SSM..
 		cfg.db.tableName = goDotEnvVariable("TABLE_NAME")
@@ -131,37 +131,15 @@ func main() {
 		SessionManager: sessionManager,
 	}
 
-	// Initialize a tls.Config struct to hold the non-default TLS settings we
-	// want the server to use. In this case the only thing that we're changing
-	// is the curve preferences value, so that only elliptic curves with
-	// assembly implementations are used.
-	//tlsConfig := &tls.Config{
-	//	CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
-	//}
-
-	// Initialize a new http.Server struct. We set the Addr and Handler fields so
-	// that the server uses the same network address and routes as before.
 	srv := &http.Server{
-		Addr:    *addr,
-		Handler: app.Routes(),
-		// Create a *log.Logger from our structured logger handler, which writes
-		// log entries at Error level, and assign it to the ErrorLog field. If
-		// you would prefer to log the server errors at Warn level instead, you
-		// could pass slog.LevelWarn as the final parameter.
-		//ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
-		//TLSConfig: tlsConfig,
-		// Add Idle, Read and Write timeouts to the server.
+		Addr:         *addr,
+		Handler:      app.Routes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
-	//logger.Info("starting server", "addr", *addr)
-
-	// Call the ListenAndServe() method on our new http.Server struct to start
-	// the server.
 	err = srv.ListenAndServe()
-	//logger.Error(err.Error())
 	os.Exit(1)
 }
 

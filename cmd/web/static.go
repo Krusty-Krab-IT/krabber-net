@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -53,8 +54,14 @@ func (app *Application) allCrabs(w http.ResponseWriter, r *http.Request) {
 		app.NotFound(w)
 		return
 	}
+	c, err := app.Crabs.ByID(id)
+	if err != nil {
+		fmt.Printf("ERROR getting crab %v", err)
+		app.serverError(w, r, err)
+		return
+	}
+
 	crabs, err := app.Crabs.Show() /// add get string here
-	//fmt.Printf("Heres the crabs %v", crabs)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -62,6 +69,7 @@ func (app *Application) allCrabs(w http.ResponseWriter, r *http.Request) {
 
 	data := app.NewTemplateData(r)
 	data.Crabs = crabs
+	data.Crab = c
 	app.Render(w, r, http.StatusOK, "crabs.html", data)
 }
 
